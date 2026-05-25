@@ -1,0 +1,19 @@
+{
+  "name": "condicio-schema",
+  "version": "0.1.0",
+  "description": "Open schema for structured contract intelligence data: parties, clauses, obligations, risks, dates, financial terms, and more.",
+  "main": "schema/condicio.schema.json",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/docfide/condicio"
+  },
+  "keywords": [
+    "contract",
+    "schema",
+    "clm",
+    "contract-intelligence",
+    "legal-tech",
+    "json-schema"
+  ]
+}

@@ -1,0 +1,569 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://condicio.dev/schema/condicio.schema.json",
+  "title": "Condicio Schema",
+  "description": "Open schema for structured contract intelligence data: parties, clauses, obligations, risks, dates, financial terms, and more.",
+  "type": "object",
+  "required": [
+    "condicio",
+    "specVersion",
+    "contract",
+    "parties"
+  ],
+  "properties": {
+    "condicio": {
+      "description": "Immutable identifier for the Condicio schema version.",
+      "const": "https://condicio.dev/schema/condicio.schema.json"
+    },
+    "specVersion": {
+      "description": "Version of the Condicio specification this document conforms to.",
+      "type": "string",
+      "enum": ["0.1.0"]
+    },
+    "id": {
+      "description": "Unique identifier for this contract document (UUID, URI, or application-specific ID).",
+      "type": "string"
+    },
+    "contract": {
+      "description": "Top-level metadata about the contract document.",
+      "type": "object",
+      "required": ["title"],
+      "properties": {
+        "title": {
+          "description": "Full title or name of the contract.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Classification of the contract type.",
+          "type": "string",
+          "examples": [
+            "NDA",
+            "MSA",
+            "SOW",
+            "License Agreement",
+            "Service Agreement",
+            "Employment Agreement",
+            "Partnership Agreement",
+            "Lease",
+            "Purchase Agreement",
+            "Insurance Policy"
+          ]
+        },
+        "description": {
+          "description": "Short summary or purpose of the contract.",
+          "type": "string"
+        },
+        "language": {
+          "description": "Primary language of the contract (BCP 47 code).",
+          "type": "string",
+          "default": "en",
+          "examples": ["en", "de", "fr", "es", "ja"]
+        },
+        "jurisdiction": {
+          "description": "Governing jurisdiction rendered as country or region identifier.",
+          "type": "string",
+          "examples": ["New York", "England and Wales", "Delaware", "Germany"]
+        },
+        "governingLaw": {
+          "description": "Explicit governing law clause text or reference.",
+          "type": "string"
+        },
+        "status": {
+          "description": "Lifecycle status of the contract.",
+          "type": "string",
+          "enum": [
+            "draft",
+            "proposed",
+            "executed",
+            "active",
+            "amended",
+            "terminated",
+            "expired",
+            "superseded"
+          ]
+        },
+        "contractId": {
+          "description": "External contract identifier used by the source system (e.g., CLM ID, document number).",
+          "type": "string"
+        },
+        "executionDate": {
+          "description": "Date the contract was signed by all parties.",
+          "$ref": "#/$defs/date"
+        },
+        "effectiveDate": {
+          "description": "Date the contract becomes effective.",
+          "$ref": "#/$defs/date"
+        },
+        "expiryDate": {
+          "description": "Date the contract expires.",
+          "$ref": "#/$defs/date"
+        },
+        "renewalTerms": {
+          "description": "Description of renewal terms or conditions.",
+          "type": "string"
+        },
+        "amendmentSummary": {
+          "description": "Summary of amendments if this document supersedes a prior version.",
+          "type": "string"
+        }
+      }
+    },
+    "parties": {
+      "description": "Parties to the contract with roles and identifiers.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/party"
+      }
+    },
+    "dates": {
+      "description": "Key dates extracted from or associated with the contract.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/contractDate"
+      }
+    },
+    "clauses": {
+      "description": "Extracted clauses, sections, or provisions.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/clause"
+      }
+    },
+    "obligations": {
+      "description": "Obligations, covenants, duties, or action items imposed on any party.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/obligation"
+      }
+    },
+    "financials": {
+      "description": "Monetary terms and financial provisions.",
+      "type": "object",
+      "properties": {
+        "currency": {
+          "description": "Default currency for all financial terms (ISO 4217).",
+          "type": "string",
+          "examples": ["USD", "EUR", "GBP", "NGN"]
+        },
+        "terms": {
+          "description": "Individual financial terms extracted from the contract.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/financialTerm"
+          }
+        },
+        "paymentSchedule": {
+          "description": "Structured payment schedule if applicable.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/payment"
+          }
+        }
+      }
+    },
+    "risks": {
+      "description": "Risk flags and assessments identified in the contract.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/risk"
+      }
+    },
+    "definitions": {
+      "description": "Defined terms and their definitions extracted from the contract.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["term", "definition"],
+        "properties": {
+          "term": {
+            "description": "The defined term or capitalised phrase.",
+            "type": "string"
+          },
+          "definition": {
+            "description": "The definition text.",
+            "type": "string"
+          },
+          "clauseRef": {
+            "description": "Reference to the clause where this term is defined.",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "metadata": {
+      "description": "Extraction and processing metadata.",
+      "type": "object",
+      "properties": {
+        "extractedAt": {
+          "description": "ISO 8601 timestamp of extraction.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "extractedBy": {
+          "description": "Name or identifier of the extraction tool or agent.",
+          "type": "string"
+        },
+        "extractionEngine": {
+          "description": "Tool, engine, or model used for extraction.",
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "version": { "type": "string" }
+          }
+        },
+        "confidence": {
+          "description": "Overall extraction confidence score (0.0 to 1.0).",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "sourceDocument": {
+          "description": "Reference to the source document.",
+          "type": "object",
+          "properties": {
+            "filename": { "type": "string" },
+            "mediaType": { "type": "string" },
+            "size": { "type": "integer" },
+            "pages": { "type": "integer" },
+            "hash": {
+              "type": "object",
+              "properties": {
+                "algorithm": { "type": "string", "examples": ["sha256", "md5"] },
+                "value": { "type": "string" }
+              }
+            },
+            "uri": { "type": "string", "format": "uri" }
+          }
+        },
+        "tags": {
+          "description": "Arbitrary tags or labels applied to this contract.",
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "custom": {
+          "description": "Extensible container for tool-specific or organisation-specific metadata.",
+          "type": "object"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "date": {
+      "description": "A date string in ISO 8601 format (YYYY-MM-DD) or full datetime.",
+      "type": "string",
+      "oneOf": [
+        { "format": "date" },
+        { "format": "date-time" }
+      ]
+    },
+    "contactInfo": {
+      "description": "Contact information for a person or organisation.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "address": { "$ref": "#/$defs/address" }
+      }
+    },
+    "address": {
+      "description": "A postal address.",
+      "type": "object",
+      "properties": {
+        "street": { "type": "string" },
+        "city": { "type": "string" },
+        "stateOrProvince": { "type": "string" },
+        "postalCode": { "type": "string" },
+        "country": { "type": "string" }
+      }
+    },
+    "party": {
+      "description": "A named party to the contract.",
+      "type": "object",
+      "required": ["name", "role"],
+      "properties": {
+        "id": {
+          "description": "Unique identifier for this party within the document.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Full legal name of the party.",
+          "type": "string"
+        },
+        "alias": {
+          "description": "Short name or abbreviation used throughout the contract.",
+          "type": "string"
+        },
+        "role": {
+          "description": "Role of the party in the contract.",
+          "type": "string",
+          "examples": ["buyer", "seller", "licensor", "licensee", "employer", "employee", "landlord", "tenant", "insurer", "insured", "service provider", "client", "joint venture partner"]
+        },
+        "type": {
+          "description": "Legal entity type.",
+          "type": "string",
+          "examples": ["corporation", "llc", "individual", "partnership", "government", "non-profit"]
+        },
+        "jurisdiction": {
+          "description": "Jurisdiction of formation or residence.",
+          "type": "string",
+          "examples": ["Delaware", "England and Wales", "Germany"]
+        },
+        "contact": {
+          "$ref": "#/$defs/contactInfo"
+        },
+        "representative": {
+          "description": "Signatory or representative acting for this party.",
+          "$ref": "#/$defs/contactInfo"
+        }
+      }
+    },
+    "contractDate": {
+      "description": "A named date associated with the contract.",
+      "type": "object",
+      "required": ["label", "date"],
+      "properties": {
+        "label": {
+          "description": "Semantic label for this date.",
+          "type": "string",
+          "examples": ["execution", "effective", "expiry", "renewal", "notice deadline", "delivery", "payment due", "termination"]
+        },
+        "date": {
+          "$ref": "#/$defs/date"
+        },
+        "description": {
+          "description": "Context or description of this date.",
+          "type": "string"
+        },
+        "clauseRef": {
+          "description": "Reference to the relevant clause.",
+          "type": "string"
+        }
+      }
+    },
+    "clause": {
+      "description": "An extracted clause, section, or provision.",
+      "type": "object",
+      "required": ["id", "text"],
+      "properties": {
+        "id": {
+          "description": "Clause identifier (e.g., section number or generated ID).",
+          "type": "string"
+        },
+        "title": {
+          "description": "Clause heading or title.",
+          "type": "string"
+        },
+        "text": {
+          "description": "Full text of the clause.",
+          "type": "string"
+        },
+        "summary": {
+          "description": "Short AI-generated or human-written summary.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Classification of the clause.",
+          "type": "string",
+          "examples": [
+            "confidentiality",
+            "indemnification",
+            "limitation of liability",
+            "termination",
+            "payment",
+            "warranty",
+            "intellectual property",
+            "data protection",
+            "non-compete",
+            "force majeure",
+            "dispute resolution",
+            "governing law",
+            "assignment",
+            "insurance",
+            "audit"
+          ]
+        },
+        "scope": {
+          "description": "Scope of the clause (e.g., which parties it binds).",
+          "type": "string"
+        },
+        "obligationRefs": {
+          "description": "References to obligations derived from this clause.",
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "riskRefs": {
+          "description": "References to risks identified in this clause.",
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "confidence": {
+          "description": "Extraction confidence for this clause (0.0 to 1.0).",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "obligation": {
+      "description": "An obligation, duty, covenant, or action item imposed on a party.",
+      "type": "object",
+      "required": ["description", "obligor"],
+      "properties": {
+        "id": {
+          "description": "Unique identifier for this obligation.",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description of the obligation.",
+          "type": "string"
+        },
+        "obligor": {
+          "description": "Party or role responsible for fulfilling the obligation.",
+          "type": "string"
+        },
+        "beneficiary": {
+          "description": "Party or role entitled to the obligation.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Category of obligation.",
+          "type": "string",
+          "examples": [
+            "payment",
+            "delivery",
+            "reporting",
+            "compliance",
+            "confidentiality",
+            "insurance",
+            "maintenance",
+            "notice",
+            "performance",
+            "non-competition"
+          ]
+        },
+        "deadline": {
+          "description": "Date or trigger for the obligation.",
+          "type": "string"
+        },
+        "deadlineType": {
+          "description": "How the deadline is defined.",
+          "type": "string",
+          "enum": ["fixed date", "days from event", "recurring", "conditional", "ongoing"]
+        },
+        "status": {
+          "description": "Current status of the obligation.",
+          "type": "string",
+          "enum": ["pending", "fulfilled", "overdue", "waived", "breached"]
+        },
+        "clauseRef": {
+          "description": "Reference to the source clause.",
+          "type": "string"
+        },
+        "confidence": {
+          "description": "Extraction confidence (0.0 to 1.0).",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "financialTerm": {
+      "description": "A financial term or monetary provision.",
+      "type": "object",
+      "required": ["label", "amount"],
+      "properties": {
+        "label": {
+          "description": "Label for this financial term.",
+          "type": "string",
+          "examples": ["contract value", "annual fee", "monthly payment", "deposit", "interest rate", "late fee", "minimum commitment", "cap", "threshold"]
+        },
+        "amount": {
+          "description": "Monetary amount as a number.",
+          "type": "number"
+        },
+        "currency": {
+          "description": "ISO 4217 currency code (overrides top-level currency).",
+          "type": "string"
+        },
+        "period": {
+          "description": "Period this amount applies to.",
+          "type": "string",
+          "examples": ["one-time", "monthly", "annually", "quarterly", "per unit"]
+        },
+        "description": {
+          "description": "Context or description of this financial term.",
+          "type": "string"
+        },
+        "clauseRef": {
+          "description": "Reference to the relevant clause.",
+          "type": "string"
+        }
+      }
+    },
+    "payment": {
+      "description": "A scheduled payment.",
+      "type": "object",
+      "required": ["dueDate", "amount"],
+      "properties": {
+        "dueDate": { "$ref": "#/$defs/date" },
+        "amount": { "type": "number" },
+        "description": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "paid", "overdue", "cancelled"]
+        },
+        "paidDate": { "$ref": "#/$defs/date" }
+      }
+    },
+    "risk": {
+      "description": "A risk flag or assessment identified in the contract.",
+      "type": "object",
+      "required": ["description", "severity"],
+      "properties": {
+        "id": {
+          "description": "Unique identifier for this risk.",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description of the risk.",
+          "type": "string"
+        },
+        "severity": {
+          "description": "Risk severity level.",
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"]
+        },
+        "category": {
+          "description": "Risk category.",
+          "type": "string",
+          "examples": ["financial", "legal", "compliance", "operational", "reputational", "data security", "intellectual property"]
+        },
+        "impact": {
+          "description": "Description of potential impact.",
+          "type": "string"
+        },
+        "mitigation": {
+          "description": "Existing mitigation or recommended action.",
+          "type": "string"
+        },
+        "affectedParty": {
+          "description": "Party most affected by this risk.",
+          "type": "string"
+        },
+        "clauseRef": {
+          "description": "Reference to the relevant clause.",
+          "type": "string"
+        },
+        "confidence": {
+          "description": "Extraction confidence (0.0 to 1.0).",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}
