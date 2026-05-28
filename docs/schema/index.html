@@ -108,10 +108,27 @@
   </footer>
 
   <script>
-  const SCHEMA_URL = 'https://raw.githubusercontent.com/docfide/condicio/main/schema/condicio.schema.json';
+  const SCHEMA_CANDIDATES = [
+    '../../schema/condicio.schema.json',
+    'condicio.schema.json',
+    'https://raw.githubusercontent.com/docfide/condicio/main/schema/condicio.schema.json'
+  ];
 
   let schemaData = null;
   let selectedPath = null;
+
+  async function fetchAny(candidates) {
+    let lastErr = null;
+    for (const url of candidates) {
+      try {
+        const res = await fetch(url);
+        if (res.ok) return { res, url };
+      } catch (err) {
+        lastErr = err;
+      }
+    }
+    throw lastErr || new Error('Failed to load from all candidate sources.');
+  }
 
   function typeClass(type) {
     if (type === 'object') return 'object';
@@ -350,8 +367,7 @@
 
   async function loadSchema() {
     try {
-      const res = await fetch(SCHEMA_URL);
-      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const { res, url } = await fetchAny(SCHEMA_CANDIDATES);
       schemaData = await res.json();
 
       const versionEl = document.getElementById('schema-version');
@@ -370,8 +386,7 @@
       document.getElementById('schema-tree').innerHTML =
         '<div style="text-align:center;padding:40px;color:#dc2626;">' +
         '<p>Failed to load schema: ' + escapeHtml(err.message) + '</p>' +
-        '<p style="margin-top:8px;font-size:0.85rem;">Make sure the schema file is accessible at ' +
-        '<a href="' + SCHEMA_URL + '" target="_blank">' + SCHEMA_URL + '</a></p></div>';
+        '<p style="margin-top:8px;font-size:0.85rem;">Make sure the schema file is accessible.</p></div>';
     }
   }
 

@@ -128,11 +128,38 @@
     'email': function(s) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); },
   };
 
-  const SCHEMA_URL = 'https://raw.githubusercontent.com/docfide/condicio/main/schema/condicio.schema.json';
-  const EXAMPLE_BASE = 'https://raw.githubusercontent.com/docfide/condicio/main/schema/examples';
+  const SCHEMA_CANDIDATES = [
+    '../../schema/condicio.schema.json',
+    '../schema/condicio.schema.json',
+    'https://raw.githubusercontent.com/docfide/condicio/main/schema/condicio.schema.json'
+  ];
+
+  const EXAMPLE_CANDIDATES = {
+    nda: [
+      '../../schema/examples/nda.json',
+      '../schema/examples/nda.json',
+      'https://raw.githubusercontent.com/docfide/condicio/main/schema/examples/nda.json'
+    ],
+    service: [
+      '../../schema/examples/service-agreement.json',
+      '../schema/examples/service-agreement.json',
+      'https://raw.githubusercontent.com/docfide/condicio/main/schema/examples/service-agreement.json'
+    ],
+    employment: [
+      '../../schema/examples/employment-agreement.json',
+      '../schema/examples/employment-agreement.json',
+      'https://raw.githubusercontent.com/docfide/condicio/main/schema/examples/employment-agreement.json'
+    ],
+    license: [
+      '../../schema/examples/license-agreement.json',
+      '../schema/examples/license-agreement.json',
+      'https://raw.githubusercontent.com/docfide/condicio/main/schema/examples/license-agreement.json'
+    ]
+  };
 
   let validator = null;
   let schemaLoaded = false;
+  let schemaLoadError = null;
 
   const textarea = document.getElementById('json-input');
   const resultsDiv = document.getElementById('results');
@@ -140,10 +167,31 @@
   const statusBadge = document.getElementById('status-badge');
   const resultTime = document.getElementById('result-time');
 
+  async function fetchAny(candidates) {
+    let lastErr = null;
+    for (const url of candidates) {
+      try {
+        const res = await fetch(url);
+        if (res.ok) return { res, url };
+      } catch (err) {
+        lastErr = err;
+      }
+    }
+    throw lastErr || new Error('Failed to load from all candidate sources.');
+  }
+
+  function showError(err) {
+    const isFileProtocol = window.location.protocol === 'file:';
+    if (isFileProtocol) {
+      resultsDiv.innerHTML = '<div class="result-fail"><h4>Not available when opened as a local file</h4><ul><li>The validator needs a web server to load the schema and AJV library. Use GitHub Pages or run a local server: <code>npx serve docs/</code></li></ul></div>';
+    } else {
+      resultsDiv.innerHTML = '<div class="result-fail"><h4>Failed to load schema</h4><ul><li>' + escapeHtml(err.message) + '</li></ul></div>';
+    }
+  }
+
   async function initValidator() {
     try {
-      const res = await fetch(SCHEMA_URL);
-      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const { res, url } = await fetchAny(SCHEMA_CANDIDATES);
       const schema = await res.json();
 
       const ajv = new Ajv({ allErrors: true, verbose: true });
@@ -155,18 +203,26 @@
 
       statusBadge.textContent = 'Schema loaded';
       statusBadge.style.color = 'var(--teal-600)';
+      
+      // If user already typed or pasted JSON, validate it now
+      if (textarea.value.trim()) {
+        validate();
+      }
 
     } catch (err) {
-      const isFileProtocol = window.location.protocol === 'file:';
-      if (isFileProtocol) {
-        resultsDiv.innerHTML = '<div class="result-fail"><h4>Not available when opened as a local file</h4><ul><li>The validator needs a web server to load the schema and AJV library. Use GitHub Pages or run a local server: <code>npx serve docs/</code></li></ul></div>';
-      } else {
-        resultsDiv.innerHTML = '<div class="result-fail"><h4>Failed to load schema</h4><ul><li>' + escapeHtml(err.message) + '</li></ul></div>';
-      }
+      schemaLoadError = err;
+      showError(err);
+      statusBadge.textContent = 'Failed to load schema';
+      statusBadge.style.color = '#dc2626';
     }
   }
 
   function validate() {
+    if (schemaLoadError) {
+      showError(schemaLoadError);
+      return;
+    }
+
     if (!schemaLoaded) {
       resultsDiv.innerHTML = '<div style="padding:20px;text-align:center;color:var(--slate-500);"><div class="loading-spinner"></div><p style="margin-top:8px;">Loading schema...</p></div>';
       return;
@@ -222,25 +278,24 @@
   });
 
   async function loadExample(type) {
-    const files = {
-      nda: 'nda.json',
-      service: 'service-agreement.json',
-      employment: 'employment-agreement.json',
-      license: 'license-agreement.json'
-    };
-    const file = files[type];
-    if (!file) return;
+    const candidates = EXAMPLE_CANDIDATES[type];
+    if (!candidates) return;
 
     statusBadge.textContent = 'Loading example...';
     statusBadge.style.color = 'var(--slate-500)';
 
     try {
-      const res = await fetch(EXAMPLE_BASE + '/' + file);
-      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const { res, url } = await fetchAny(candidates);
       const text = await res.text();
       textarea.value = text;
+      
+      statusBadge.textContent = 'Example loaded';
+      statusBadge.style.color = 'var(--teal-600)';
+      
       validate();
     } catch (err) {
+      statusBadge.textContent = 'Failed to load example';
+      statusBadge.style.color = '#dc2626';
       resultsDiv.innerHTML = '<div class="result-fail"><h4>Failed to load example</h4><ul><li>' + escapeHtml(err.message) + '</li></ul></div>';
     }
   }
@@ -249,7 +304,17 @@
     textarea.value = '';
     resultsDiv.innerHTML = emptyState.outerHTML;
     resultTime.textContent = '';
-    statusBadge.textContent = '';
+    
+    if (schemaLoaded) {
+      statusBadge.textContent = 'Schema loaded';
+      statusBadge.style.color = 'var(--teal-600)';
+    } else if (schemaLoadError) {
+      statusBadge.textContent = 'Failed to load schema';
+      statusBadge.style.color = '#dc2626';
+    } else {
+      statusBadge.textContent = '';
+    }
+    
     textarea.focus();
   }
 
