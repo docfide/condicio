@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Condicio — Social Preview Template</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@450;500;600&family=Inter:wght@400;500;650;800&family=Outfit:wght@500;600;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Reset & Core variables */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #F0F2F5;
+      color: #1E293B;
+      padding: 60px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 60px;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #0F172A;
+      text-align: center;
+      margin-bottom: -10px;
+    }
+    
+    p.subtitle {
+      color: #64748B;
+      font-size: 1.1rem;
+      text-align: center;
+      max-width: 600px;
+      line-height: 1.5;
+    }
+    
+    /* 1280x640px Screen Capture Cards */
+    .preview-card {
+      width: 1280px;
+      height: 640px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 16px;
+      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.15);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      padding: 64px 80px;
+      background-color: #FAFAFA;
+    }
+    
+    /* ========================================================================= */
+    /* LIGHT THEME DESIGN                                                        */
+    /* ========================================================================= */
+    .preview-card.light {
+      background-color: #FAFAFA;
+      /* Subtle developer grid paper pattern */
+      background-image: 
+        linear-gradient(to right, #F1F5F9 2px, transparent 2px),
+        linear-gradient(to bottom, #F1F5F9 2px, transparent 2px);
+      background-size: 80px 80px;
+    }
+    
+    /* Ambient Glows for Light Mode */
+    .preview-card.light::before {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(235, 245, 240, 0.8) 0%, rgba(235, 245, 240, 0) 70%);
+      top: -100px;
+      left: -100px;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    .preview-card.light::after {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(239, 246, 255, 0.7) 0%, rgba(239, 246, 255, 0) 70%);
+      bottom: -150px;
+      right: -150px;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    /* ========================================================================= */
+    /* DARK THEME DESIGN                                                         */
+    /* ========================================================================= */
+    .preview-card.dark {
+      background-color: #060B11;
+      border: 1px solid rgba(30, 41, 59, 0.7);
+      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
+    }
+    
+    /* Ambient Glows for Dark Mode */
+    .preview-card.dark::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(15, 110, 86, 0.15) 0%, rgba(15, 110, 86, 0) 70%);
+      top: -150px;
+      left: -100px;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    .preview-card.dark::after {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(79, 70, 229, 0.12) 0%, rgba(79, 70, 229, 0) 70%);
+      bottom: -150px;
+      right: -100px;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    /* ========================================================================= */
+    /* COLUMN STRUCTURES                                                         */
+    /* ========================================================================= */
+    .col-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      z-index: 10;
+      position: relative;
+    }
+    
+    .col-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      z-index: 10;
+      position: relative;
+    }
+    
+
+    
+    /* Title and Official Logo Lockup */
+    .logo-lockup {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 12px;
+    }
+    
+    .logo-container {
+      background-color: #FFFFFF;
+      border: 1.5px solid #CBD5E1;
+      width: 80px;
+      height: 80px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px -2px rgba(15, 23, 42, 0.05);
+    }
+    
+    .dark .logo-container {
+      background-color: #0B1017;
+      border: 1.5px solid #1E293B;
+      box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
+    }
+    
+    .logo-container svg {
+      width: 64px;
+      height: 64px;
+    }
+    
+    .logo-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 4rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+    
+    .light .logo-title {
+      color: #0F172A;
+    }
+    
+    .dark .logo-title {
+      color: #FFFFFF;
+    }
+    
+    /* Main Slogan text */
+    .slogan {
+      font-size: 1.75rem;
+      font-weight: 550;
+      line-height: 1.35;
+      letter-spacing: -0.015em;
+      margin-bottom: 36px;
+      max-width: 580px;
+    }
+    
+    .light .slogan {
+      color: #334155;
+    }
+    
+    .dark .slogan {
+      color: #E2E8F0;
+    }
+    
+    /* Taxonomy Badges */
+    .tag-grid {
+      display: grid;
+      grid-template-columns: repeat(3, auto);
+      gap: 12px;
+      justify-content: flex-start;
+      margin-top: auto;
+    }
+    
+    .tag-pill {
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-width: 1.5px;
+      border-style: solid;
+    }
+    
+    /* Taxonomy pill specific color systems */
+    .tag-parties {
+      background-color: #EEF2FF; border-color: #C7D2FE; color: #4F46E5;
+    }
+    .tag-clauses {
+      background-color: #EFF6FF; border-color: #BFDBFE; color: #1D4ED8;
+    }
+    .tag-obligations {
+      background-color: #EBF5F0; border-color: #A3D9C9; color: #0F6E56;
+    }
+    .tag-risks {
+      background-color: #FDF2F8; border-color: #FBCFE8; color: #BE185D;
+    }
+    .tag-dates {
+      background-color: #FFFBEB; border-color: #FEF3C7; color: #B45309;
+    }
+    .tag-financials {
+      background-color: #ECFDF5; border-color: #A7F3D0; color: #047857;
+    }
+    
+    /* Dark versions of taxonomy pills */
+    .dark .tag-parties { background-color: rgba(79, 70, 229, 0.15); border-color: rgba(79, 70, 229, 0.3); color: #A5B4FC; }
+    .dark .tag-clauses { background-color: rgba(29, 78, 216, 0.15); border-color: rgba(29, 78, 216, 0.3); color: #93C5FD; }
+    .dark .tag-obligations { background-color: rgba(15, 110, 86, 0.15); border-color: rgba(15, 110, 86, 0.4); color: #34D399; }
+    .dark .tag-risks { background-color: rgba(190, 24, 93, 0.15); border-color: rgba(190, 24, 93, 0.3); color: #FBCFE8; }
+    .dark .tag-dates { background-color: rgba(180, 83, 9, 0.15); border-color: rgba(180, 83, 9, 0.3); color: #FDE68A; }
+    .dark .tag-financials { background-color: rgba(4, 120, 87, 0.15); border-color: rgba(4, 120, 87, 0.3); color: #6EE7B7; }
+    
+    /* ========================================================================= */
+    /* CODE EDITOR CARD                                                          */
+    /* ========================================================================= */
+    .code-card {
+      width: 440px;
+      height: 480px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-style: solid;
+      border-width: 1px;
+    }
+    
+    .light .code-card {
+      background-color: #FFFFFF;
+      border-color: #E2E8F0;
+      box-shadow: 0 12px 30px -10px rgba(148, 163, 184, 0.3);
+    }
+    
+    .dark .code-card {
+      background-color: #080D14;
+      border-color: #1E293B;
+      box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.6);
+    }
+    
+    /* Top Bar */
+    .code-header {
+      height: 48px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+    }
+    
+    .light .code-header {
+      background-color: #FFFFFF;
+      border-bottom-color: #E2E8F0;
+    }
+    
+    .dark .code-header {
+      background-color: #080D14;
+      border-bottom-color: #1E293B;
+    }
+    
+    .window-dots {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    
+    .dot-red { background-color: #EF4444; }
+    .dot-yellow { background-color: #F59E0B; }
+    .dot-green { background-color: #10B981; }
+    
+    .file-tab {
+      margin-left: 32px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    
+    .light .file-tab { color: #94A3B8; }
+    .dark .file-tab { color: #475569; }
+    
+    /* Code Body */
+    .code-body {
+      flex: 1;
+      padding: 24px;
+      font-family: 'Fira Code', 'JetBrains Mono', source-code-pro, monospace;
+      font-size: 12.5px;
+      line-height: 1.55;
+    }
+    
+    .light .code-body {
+      background-color: #F8FAFC;
+    }
+    
+    .dark .code-body {
+      background-color: #04080D;
+    }
+    
+    /* Light Syntax Highlighting */
+    .light .syn-key { color: #0F6E56; font-weight: 500; }     /* Teal keys */
+    .light .syn-val { color: #059669; }                       /* Emerald values */
+    .light .syn-ref { color: #7C3AED; }                       /* Violet definitions */
+    .light .syn-sym { color: #475569; }                       /* Slate syntax symbols */
+    .light .syn-subkey { color: #D946EF; }                    /* Pink nested keys */
+    
+    /* Dark Syntax Highlighting */
+    .dark .syn-key { color: #10B981; font-weight: 500; }      /* Bright green keys */
+    .dark .syn-val { color: #34D399; }                        /* Mint green values */
+    .dark .syn-ref { color: #A78BFA; }                        /* Soft purple references */
+    .dark .syn-sym { color: #64748B; }                        /* Slate symbols */
+    .dark .syn-subkey { color: #F472B6; }                     /* Soft pink nested keys */
+    
+    /* Indent Utilities */
+    .indent-1 { padding-left: 18px; }
+    .indent-2 { padding-left: 36px; }
+    .indent-3 { padding-left: 54px; }
+    
+  </style>
+</head>
+<body>
+
+  <h1>Condicio Schema — Social Previews</h1>
+  <p class="subtitle">Open standard for contract intelligence data. Position your browser viewport and capture either the clean Light Mode or high-contrast Dark Mode card for your repository Settings.</p>
+
+  <!-- =========================================================================== -->
+  <!-- LIGHT MODE CARD PREVIEW                                                     -->
+  <!-- =========================================================================== -->
+  <div class="preview-card light" id="light-preview">
+    
+    <div class="col-left">
+
+      
+      <!-- Brand & Official Logo Lockup -->
+      <div class="logo-lockup">
+        <div class="logo-container">
+          <!-- The Connector Logo -->
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M 148,48 A 70,70 0 1 0 148,152" stroke="#0F6E56" stroke-width="14" fill="none" stroke-linecap="round"/>
+            <line x1="148" y1="48" x2="177" y2="48" stroke="#0F6E56" stroke-width="14" stroke-linecap="round"/>
+            <line x1="148" y1="152" x2="177" y2="152" stroke="#0F6E56" stroke-width="14" stroke-linecap="round"/>
+            <circle cx="173" cy="90" r="4.5" fill="#0F6E56" fill-opacity="0.3"/>
+            <circle cx="173" cy="100" r="4.5" fill="#0F6E56"/>
+            <circle cx="173" cy="110" r="4.5" fill="#0F6E56" fill-opacity="0.3"/>
+          </svg>
+        </div>
+        <div class="logo-title">Condicio</div>
+      </div>
+      
+      <!-- Slogan -->
+      <div class="slogan">
+        Open standard for<br>contract intelligence data
+      </div>
+      
+      <!-- Composable Taxonomy Pills -->
+      <div class="tag-grid">
+        <div class="tag-pill tag-parties">parties</div>
+        <div class="tag-pill tag-clauses">clauses</div>
+        <div class="tag-pill tag-obligations">obligations</div>
+        <div class="tag-pill tag-risks">risks</div>
+        <div class="tag-pill tag-dates">dates</div>
+        <div class="tag-pill tag-financials">financials</div>
+      </div>
+    </div>
+    
+    <div class="col-right">
+      <!-- Monospaced Code Editor -->
+      <div class="code-card">
+        <div class="code-header">
+          <div class="window-dots">
+            <div class="dot dot-red"></div>
+            <div class="dot dot-yellow"></div>
+            <div class="dot dot-green"></div>
+          </div>
+          <div class="file-tab">schema/condicio.schema.json</div>
+        </div>
+        <div class="code-body">
+          <div><span class="syn-sym">{</span></div>
+          <div class="indent-1">
+            <span class="syn-key">"$schema"</span><span class="syn-sym">:</span> 
+            <span class="syn-val">"https://condicio.org/schema"</span><span class="syn-sym">,</span>
+          </div>
+          <div class="indent-1">
+            <span class="syn-key">"type"</span><span class="syn-sym">:</span> 
+            <span class="syn-val">"object"</span><span class="syn-sym">,</span>
+          </div>
+          <div class="indent-1">
+            <span class="syn-key">"required"</span><span class="syn-sym">:</span> <span class="syn-sym">[</span>
+          </div>
+          <div class="indent-2">
+            <span class="syn-subkey">"contract"</span><span class="syn-sym">,</span> 
+            <span class="syn-subkey">"parties"</span><span class="syn-sym">,</span> 
+            <span class="syn-subkey">"obligations"</span>
+          </div>
+          <div class="indent-1"><span class="syn-sym">],</span></div>
+          <div class="indent-1">
+            <span class="syn-key">"properties"</span><span class="syn-sym">:</span> <span class="syn-sym">{</span>
+          </div>
+          <div class="indent-2">
+            <span class="syn-subkey">"contract"</span><span class="syn-sym">:</span> <span class="syn-sym">{</span> 
+            <span class="syn-key">"$ref"</span><span class="syn-sym">:</span> 
+            <span class="syn-val">"#/defs/contract"</span> <span class="syn-sym">},</span>
+          </div>
+          <div class="indent-2">
+            <span class="syn-subkey">"parties"</span><span class="syn-sym">:</span> <span class="syn-sym">{</span>
+          </div>
+          <div class="indent-3">
+            <span class="syn-key">"type"</span><span class="syn-sym">:</span> <span class="syn-val">"array"</span><span class="syn-sym">,</span>
+          </div>
+          <div class="indent-3">
+            <span class="syn-key">"items"</span><span class="syn-sym">:</span> <span class="syn-sym">{</span> 
+            <span class="syn-key">"$ref"</span><span class="syn-sym">:</span> 
+            <span class="syn-ref">"#/defs/party"</span> <span class="syn-sym">}</span>
+          </div>
+          <div class="indent-2"><span class="syn-sym">},</span></div>
+          <div class="indent-2">
+            <span class="syn-subkey">"obligations"</span><span class="syn-sym">:</span> <span class="syn-sym">{</span>
+          </div>
+          <div class="indent-3">
+            <span class="syn-key">"type"</span><span class="syn-sym">:</span> <span class="syn-val">"array"</span><span class="syn-sym">,</span>
+          </div>
+          <div class="indent-3">
+            <span class="syn-key">"items"</span><span class="syn-sym">:</span> <span class="syn-sym">{</span> 
+            <span class="syn-key">"$ref"</span><span class="syn-sym">:</span> 
+            <span class="syn-ref">"#/defs/obligation"</span> <span class="syn-sym">}</span>
+          </div>
+          <div class="indent-2"><span class="syn-sym">}</span></div>
+          <div class="indent-1"><span class="syn-sym">}</span></div>
+          <div><span class="syn-sym">}</span></div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <!-- =========================================================================== -->
+  <!-- DARK MODE CARD PREVIEW                                                      -->
+  <!-- =========================================================================== -->
+  <div class="preview-card dark" id="dark-preview">
+    
+    <div class="col-left">
+
+      
+      <!-- Brand & Official Logo Lockup -->
+      <div class="logo-lockup">
+        <div class="logo-container">
+          <!-- The Connector Logo -->
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M 148,48 A 70,70 0 1 0 148,152" stroke="#10B981" stroke-width="14" fill="none" stroke-linecap="round"/>
+            <line x1="148" y1="48" x2="177" y2="48" stroke="#10B981" stroke-width="14" stroke-linecap="round"/>
+            <line x1="148" y1="152" x2="177" y2="152" stroke="#10B981" stroke-width="14" stroke-linecap="round"/>
+            <circle cx="173" cy="90" r="4.5" fill="#10B981" fill-opacity="0.3"/>
+            <circle cx="173" cy="100" r="4.5" fill="#10B981"/>
+            <circle cx="173" cy="110" r="4.5" fill="#10B981" fill-opacity="0.3"/>
+          </svg>
+        </div>
+        <div class="logo-title">Condicio</div>
+      </div>
+      
+      <!-- Slogan -->
+      <div class="slogan">
+        Open standard for<br>contract intelligence data
+      </div>
+      
+      <!-- Composable Taxonomy Pills -->
+      <div class="tag-grid">
+        <div class="tag-pill tag-parties">parties</div>
+        <div class="tag-pill tag-clauses">clauses</div>
+        <div class="tag-pill tag-obligations">obligations</div>
+        <div class="tag-pill tag-risks">risks</div>
+        <div class="tag-pill tag-dates">dates</div>
+        <div class="tag-pill tag-financials">financials</div>
+      </div>
+    </div>
+    
+    <div class="col-right">
+      <!-- Monospaced Code Editor -->
+      <div class="code-card">
+        <div class="code-header">
+          <div class="window-dots">
+            <div class="dot dot-red"></div>
+            <div class="dot dot-yellow"></div>
+            <div class="dot dot-green"></div>
+          </div>
+          <div class="file-tab">schema/condicio.schema.json</div>
+        </div>
+        <div class="code-body">
+          <div><span class="syn-sym">{</span></div>
+          <div class="indent-1">
+            <span class="syn-key">"$schema"</span><span class="syn-sym">:</span> 
+            <span class="syn-val">"https://condicio.org/schema"</span><span class="syn-sym">,</span>
+          </div>
+          <div class="indent-1">
+            <span class="syn-key">"type"</span><span class="syn-sym">:</span> 
+            <span class="syn-val">"object"</span><span class="syn-sym">,</span>
+          </div>
+          <div class="indent-1">
+            <span class="syn-key">"required"</span><span class="syn-sym">:</span> <span class="syn-sym">[</span>
+          </div>
+          <div class="indent-2">
+            <span class="syn-subkey">"contract"</span><span class="syn-sym">,</span> 
+            <span class="syn-subkey">"parties"</span><span class="syn-sym">,</span> 
+            <span class="syn-subkey">"obligations"</span>
+          </div>
+          <div class="indent-1"><span class="syn-sym">],</span></div>
+          <div class="indent-1">
+            <span class="syn-key">"properties"</span><span class="syn-sym">:</span> <span class="syn-sym">{</span>
+          </div>
+          <div class="indent-2">
+            <span class="syn-subkey">"contract"</span><span class="syn-sym">:</span> <span class="syn-sym">{</span> 
+            <span class="syn-key">"$ref"</span><span class="syn-sym">:</span> 
+            <span class="syn-val">"#/defs/contract"</span> <span class="syn-sym">},</span>
+          </div>
+          <div class="indent-2">
+            <span class="syn-subkey">"parties"</span><span class="syn-sym">:</span> <span class="syn-sym">{</span>
+          </div>
+          <div class="indent-3">
+            <span class="syn-key">"type"</span><span class="syn-sym">:</span> <span class="syn-val">"array"</span><span class="syn-sym">,</span>
+          </div>
+          <div class="indent-3">
+            <span class="syn-key">"items"</span><span class="syn-sym">:</span> <span class="syn-sym">{</span> 
+            <span class="syn-key">"$ref"</span><span class="syn-sym">:</span> 
+            <span class="syn-ref">"#/defs/party"</span> <span class="syn-sym">}</span>
+          </div>
+          <div class="indent-2"><span class="syn-sym">},</span></div>
+          <div class="indent-2">
+            <span class="syn-subkey">"obligations"</span><span class="syn-sym">:</span> <span class="syn-sym">{</span>
+          </div>
+          <div class="indent-3">
+            <span class="syn-key">"type"</span><span class="syn-sym">:</span> <span class="syn-val">"array"</span><span class="syn-sym">,</span>
+          </div>
+          <div class="indent-3">
+            <span class="syn-key">"items"</span><span class="syn-sym">:</span> <span class="syn-sym">{</span> 
+            <span class="syn-key">"$ref"</span><span class="syn-sym">:</span> 
+            <span class="syn-ref">"#/defs/obligation"</span> <span class="syn-sym">}</span>
+          </div>
+          <div class="indent-2"><span class="syn-sym">}</span></div>
+          <div class="indent-1"><span class="syn-sym">}</span></div>
+          <div><span class="syn-sym">}</span></div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+</body>
+</html>

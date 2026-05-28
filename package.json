@@ -1,6 +1,6 @@
 {
   "name": "condicio-schema",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Open schema for structured contract intelligence data: parties, clauses, obligations, risks, dates, financial terms, and more.",
   "main": "schema/condicio.schema.json",
   "files": [

@@ -7,8 +7,10 @@
 **Open standard for contract intelligence data — parties, clauses, obligations, risks, dates, and financial terms.**
 
 [![npm](https://img.shields.io/npm/v/condicio-schema)](https://www.npmjs.com/package/condicio-schema)
+[![PyPI](https://img.shields.io/pypi/v/condicio)](https://pypi.org/project/condicio/)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 [![JSON Schema](https://img.shields.io/badge/JSON%20Schema-2020--12-green)](schema/condicio.schema.json)
+[![GitHub Pages](https://img.shields.io/badge/docs-gh--pages-0f6e56)](https://docfide.github.io/condicio/)
 
 ---
 
@@ -107,8 +109,11 @@ The schema is defined in [`schema/condicio.schema.json`](schema/condicio.schema.
 
 ## Quick Start
 
+**Try it now:** [Live Validator](https://docfide.github.io/condicio/validator/) — paste a Condicio document and validate in your browser.
+
+### npm
+
 ```bash
-# Install via npm
 npm install condicio-schema
 
 # Validate your contract data
@@ -131,6 +136,30 @@ if (validate(myContractData)) {
 } else {
   console.error(validate.errors)
 }
+```
+
+### Python
+
+```bash
+pip install condicio
+
+# Validate a document
+condicio validate your-contract.json
+
+# Inspect a document
+condicio inspect your-contract.json
+```
+
+```python
+from condicio.validator import validate_document
+import json
+
+with open('your-contract.json') as f:
+    data = json.load(f)
+
+errors = validate_document(data)
+if not errors:
+    print('Valid Condicio document')
 ```
 
 ### Local development
@@ -216,4 +245,5 @@ Apache 2.0. See [LICENSE](LICENSE).
 
 ---
 
-Built by [Docfide](https://docfide.com).
+Built by [Docfide](https://docfide.com).  
+[Website](https://docfide.github.io/condicio/) &middot; [Schema Browser](https://docfide.github.io/condicio/schema/) &middot; [Live Validator](https://docfide.github.io/condicio/validator/)

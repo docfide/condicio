@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schema — Condicio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><path d='M148,48A70,70 0 1 0 148,152' stroke='%230f6e56' stroke-width='14' fill='none' stroke-linecap='round'/><line x1='148' y1='48' x2='177' y2='48' stroke='%230f6e56' stroke-width='14' stroke-linecap='round'/><line x1='148' y1='152' x2='177' y2='152' stroke='%230f6e56' stroke-width='14' stroke-linecap='round'/></svg>">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="nav-brand">
+        <svg class="nav-logo" viewBox="0 0 200 200">
+          <path d="M148,48A70,70 0 1 0 148,152" stroke="#0f6e56" stroke-width="14" fill="none" stroke-linecap="round"/>
+          <line x1="148" y1="48" x2="177" y2="48" stroke="#0f6e56" stroke-width="14" stroke-linecap="round"/>
+          <line x1="148" y1="152" x2="177" y2="152" stroke="#0f6e56" stroke-width="14" stroke-linecap="round"/>
+          <circle cx="173" cy="100" r="5" fill="#0f6e56"/>
+        </svg>
+        Condicio
+      </a>
+      <ul class="nav-links">
+        <li><a href="../schema/" class="active">Schema</a></li>
+        <li><a href="../validator/">Validator</a></li>
+        <li><a href="../field-reference.md">Docs</a></li>
+        <li><a href="https://github.com/docfide/condicio">GitHub</a></li>
+        <li><a href="https://www.npmjs.com/package/condicio-schema"><span class="badge badge-npm">npm</span></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>Schema Browser</h1>
+      <p>Interactive tree of the Condicio JSON Schema. Click any node to expand it and view field details. <span id="schema-version"></span></p>
+    </div>
+  </div>
+
+  <div class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="schema-layout">
+        <div class="tree-panel">
+          <div class="tree-panel-header">
+            <span>Schema Tree</span>
+            <div>
+              <button class="btn btn-ghost" style="padding:4px 10px;font-size:0.75rem;" onclick="expandAll()">Expand All</button>
+              <button class="btn btn-ghost" style="padding:4px 10px;font-size:0.75rem;" onclick="collapseAll()">Collapse All</button>
+            </div>
+          </div>
+          <div class="tree-panel-body" id="schema-tree">
+            <div style="text-align:center;padding:40px;color:var(--slate-400);">
+              <div class="loading-spinner"></div>
+              <p style="margin-top:12px;">Loading schema...</p>
+            </div>
+          </div>
+        </div>
+        <div class="detail-panel">
+          <div class="detail-panel-header">
+            <span>Field Details</span>
+            <span style="font-size:0.75rem;color:var(--slate-400);" id="detail-path"></span>
+          </div>
+          <div class="detail-panel-body" id="detail-body">
+            <div class="detail-empty">
+              <p>Click a field in the schema tree to see its details.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="footer-brand">Condicio</div>
+        <p>Open standard for contract intelligence data. Released under the Apache 2.0 license.</p>
+        <p style="margin-top:8px;font-size:0.8rem;">A project of <a href="https://tensflare.com" style="color:var(--slate-400);">Tensflare Ltd</a>.</p>
+      </div>
+      <div>
+        <h4>Schema</h4>
+        <ul>
+          <li><a href="../schema/">Browse</a></li>
+          <li><a href="../validator/">Validator</a></li>
+          <li><a href="../field-reference.md">Reference</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Community</h4>
+        <ul>
+          <li><a href="https://github.com/docfide/condicio">GitHub</a></li>
+          <li><a href="../governance.md">Governance</a></li>
+          <li><a href="https://github.com/docfide/condicio/blob/main/CONTRIBUTING.md">Contributing</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>About</h4>
+        <ul>
+          <li><a href="https://docfide.com">Docfide</a></li>
+
+          <li><a href="https://github.com/docfide/condicio/blob/main/LICENSE">License</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  const SCHEMA_URL = 'https://raw.githubusercontent.com/docfide/condicio/main/schema/condicio.schema.json';
+
+  let schemaData = null;
+  let selectedPath = null;
+
+  function typeClass(type) {
+    if (type === 'object') return 'object';
+    if (type === 'array') return 'array';
+    if (type === 'string') return 'string';
+    if (type === 'number' || type === 'integer') return 'number';
+    if (type === 'boolean') return 'boolean';
+    return 'string';
+  }
+
+  function displayType(node) {
+    if (node.const !== undefined) return 'const: ' + JSON.stringify(node.const);
+    if (node.$ref) return node.$ref;
+    if (node.enum) return 'enum';
+    if (node.type === 'array') return 'array[' + (node.items ? (node.items.$ref ? 'ref' : node.items.type || 'any') : 'any') + ']';
+    return node.type || 'any';
+  }
+
+  function buildTree(name, node, path, required) {
+    const div = document.createElement('div');
+    div.className = 'tree-node';
+    div.dataset.path = path;
+
+    const label = document.createElement('div');
+    label.className = 'tree-node-label';
+
+    const hasChildren = (node.properties || node.$defs || (node.type === 'object' && node.properties) || (node.type === 'array' && node.items && node.items.properties) || node.oneOf) && !node.$ref;
+
+    const toggle = document.createElement('span');
+    toggle.className = 'tree-toggle' + (hasChildren ? '' : ' hidden');
+    toggle.textContent = '\u25B6';
+    label.appendChild(toggle);
+
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'tree-node-name';
+    nameSpan.textContent = name;
+    label.appendChild(nameSpan);
+
+    if (required) {
+      const req = document.createElement('span');
+      req.className = 'tree-required-mark';
+      req.textContent = '*';
+      req.title = 'Required';
+      label.appendChild(req);
+    }
+
+    if (node.$ref) {
+      const badge = document.createElement('span');
+      badge.className = 'tree-type-badge ref';
+      badge.textContent = node.$ref.replace('#/$defs/', '$');
+      label.appendChild(badge);
+    } else if (node.const !== undefined) {
+      const badge = document.createElement('span');
+      badge.className = 'tree-type-badge const';
+      badge.textContent = 'const';
+      label.appendChild(badge);
+    } else if (node.type === 'object') {
+      const badge = document.createElement('span');
+      badge.className = 'tree-type-badge object';
+      badge.textContent = 'object';
+      label.appendChild(badge);
+    } else if (node.type === 'array') {
+      const badge = document.createElement('span');
+      badge.className = 'tree-type-badge array';
+      badge.textContent = 'array';
+      label.appendChild(badge);
+    } else if (node.type === 'string') {
+      const badge = document.createElement('span');
+      badge.className = 'tree-type-badge string';
+      badge.textContent = 'string' + (node.enum ? '(' + node.enum.length + ')' : '');
+      label.appendChild(badge);
+    } else if (node.type === 'number' || node.type === 'integer') {
+      const badge = document.createElement('span');
+      badge.className = 'tree-type-badge number';
+      badge.textContent = node.type;
+      label.appendChild(badge);
+    } else if (node.oneOf) {
+      const badge = document.createElement('span');
+      badge.className = 'tree-type-badge object';
+      badge.textContent = 'oneOf';
+      label.appendChild(badge);
+    }
+
+    div.appendChild(label);
+
+    const children = document.createElement('div');
+    children.className = 'tree-children';
+
+    if (node.properties) {
+      const reqs = new Set(node.required || []);
+      for (const [key, val] of Object.entries(node.properties)) {
+        children.appendChild(buildTree(key, val, path + '.' + key, reqs.has(key)));
+      }
+    }
+
+    if (node.$defs) {
+      const defsHeader = document.createElement('div');
+      defsHeader.style.cssText = 'padding:6px 20px;font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--slate-400);border-top:1px solid var(--slate-100);margin-top:4px;';
+      defsHeader.textContent = '$defs';
+      children.appendChild(defsHeader);
+      for (const [key, val] of Object.entries(node.$defs)) {
+        children.appendChild(buildTree('$' + key, val, '$defs.' + key, false));
+      }
+    }
+
+    if (node.type === 'array' && node.items && !node.items.$ref) {
+      children.appendChild(buildTree('items', node.items, path + '.items', false));
+    }
+
+    if (node.oneOf) {
+      for (let i = 0; i < node.oneOf.length; i++) {
+        children.appendChild(buildTree('option ' + (i+1), node.oneOf[i], path + '.oneOf[' + i + ']', false));
+      }
+    }
+
+    div.appendChild(children);
+
+    label.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (hasChildren) {
+        toggle.classList.toggle('expanded');
+        children.classList.toggle('open');
+      }
+      showDetail(name, node, path);
+    });
+
+    return div;
+  }
+
+  function showDetail(name, node, path) {
+    selectedPath = path;
+    document.getElementById('detail-path').textContent = path;
+
+    const body = document.getElementById('detail-body');
+
+    if (!node || Object.keys(node).length === 0) {
+      body.innerHTML = '<div class="detail-empty"><p>No details available.</p></div>';
+      return;
+    }
+
+    let html = '';
+
+    if (node.description) {
+      html += '<div class="detail-field"><div class="detail-field-label">Description</div><div class="detail-field-value">' + escapeHtml(node.description) + '</div></div>';
+    }
+
+    if (node.$ref) {
+      html += '<div class="detail-field"><div class="detail-field-label">$ref</div><div class="detail-field-value code">' + escapeHtml(node.$ref) + '</div></div>';
+    }
+
+    const requiredFields = [];
+    if (node.required) {
+      requiredFields.push({label: 'Required', value: node.required.join(', ')});
+    }
+
+    const fields = [
+      {label: 'Type', value: node.type},
+      {label: 'Title', value: node.title},
+      {label: 'Default', value: node.default !== undefined ? JSON.stringify(node.default) : undefined},
+    ].concat(requiredFields);
+
+    if (node.enum) {
+      fields.push({label: 'Enum', value: node.enum.map(e => '"' + e + '"').join(', ')});
+    }
+
+    if (node.const !== undefined) {
+      fields.push({label: 'Const', value: JSON.stringify(node.const)});
+    }
+
+    if (node.minimum !== undefined) {
+      fields.push({label: 'Minimum', value: String(node.minimum)});
+    }
+
+    if (node.maximum !== undefined) {
+      fields.push({label: 'Maximum', value: String(node.maximum)});
+    }
+
+    if (node.examples) {
+      fields.push({label: 'Examples', value: node.examples.map(e => JSON.stringify(e)).join(', ')});
+    }
+
+    if (node.format) {
+      fields.push({label: 'Format', value: node.format});
+    }
+
+    if (node.pattern) {
+      fields.push({label: 'Pattern', value: node.pattern});
+    }
+
+    if (node.additionalProperties !== undefined) {
+      fields.push({label: 'Additional Properties', value: String(node.additionalProperties)});
+    }
+
+    for (const f of fields) {
+      if (f.value !== undefined && f.value !== null) {
+        html += '<div class="detail-field"><div class="detail-field-label">' + f.label + '</div><div class="detail-field-value">' + escapeHtml(String(f.value)) + '</div></div>';
+      }
+    }
+
+    if (node.properties) {
+      html += '<div class="detail-field"><div class="detail-field-label">Properties (' + Object.keys(node.properties).length + ')</div>';
+      html += '<div class="detail-field-value" style="font-size:0.8rem;">';
+      for (const [key, val] of Object.entries(node.properties)) {
+        const req = node.required && node.required.includes(key);
+        html += '<span style="display:inline-block;margin:2px 4px 2px 0;padding:1px 8px;border-radius:4px;background:var(--slate-50);border:1px solid var(--slate-200);">' +
+          escapeHtml(key) +
+          (req ? '<span style="color:#dc2626;margin-left:2px;">*</span>' : '') +
+          '</span>';
+      }
+      html += '</div></div>';
+    }
+
+    if (node.items && node.items.$ref) {
+      html += '<div class="detail-field"><div class="detail-field-label">Items</div><div class="detail-field-value code">' + escapeHtml(JSON.stringify(node.items, null, 2)) + '</div></div>';
+    }
+
+    body.innerHTML = html;
+  }
+
+  function escapeHtml(text) {
+    if (typeof text !== 'string') text = String(text);
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function expandAll() {
+    document.querySelectorAll('.tree-children').forEach(el => el.classList.add('open'));
+    document.querySelectorAll('.tree-toggle').forEach(el => el.classList.add('expanded'));
+  }
+
+  function collapseAll() {
+    document.querySelectorAll('.tree-children').forEach(el => el.classList.remove('open'));
+    document.querySelectorAll('.tree-toggle').forEach(el => el.classList.remove('expanded'));
+  }
+
+  async function loadSchema() {
+    try {
+      const res = await fetch(SCHEMA_URL);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      schemaData = await res.json();
+
+      const versionEl = document.getElementById('schema-version');
+      if (schemaData.properties && schemaData.properties.specVersion) {
+        const sv = schemaData.properties.specVersion;
+        versionEl.textContent = ' (specVersion: ' + (sv.const || '0.x') + ')';
+      }
+
+      const tree = document.getElementById('schema-tree');
+      tree.innerHTML = '';
+      tree.appendChild(buildTree('Condicio Document', schemaData, 'root', false));
+
+      expandAll();
+
+    } catch (err) {
+      document.getElementById('schema-tree').innerHTML =
+        '<div style="text-align:center;padding:40px;color:#dc2626;">' +
+        '<p>Failed to load schema: ' + escapeHtml(err.message) + '</p>' +
+        '<p style="margin-top:8px;font-size:0.85rem;">Make sure the schema file is accessible at ' +
+        '<a href="' + SCHEMA_URL + '" target="_blank">' + SCHEMA_URL + '</a></p></div>';
+    }
+  }
+
+  loadSchema();
+  </script>
+
+</body>
+</html>

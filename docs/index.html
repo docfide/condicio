@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Condicio — Open Standard for Contract Intelligence Data</title>
+  <meta name="description" content="Condicio is an open JSON Schema 2020-12 standard for representing structured contract intelligence data: parties, clauses, obligations, risks, dates, and financial terms.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><path d='M148,48A70,70 0 1 0 148,152' stroke='%230f6e56' stroke-width='14' fill='none' stroke-linecap='round'/><line x1='148' y1='48' x2='177' y2='48' stroke='%230f6e56' stroke-width='14' stroke-linecap='round'/><line x1='148' y1='152' x2='177' y2='152' stroke='%230f6e56' stroke-width='14' stroke-linecap='round'/></svg>">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="nav-brand">
+        <svg class="nav-logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <path d="M148,48A70,70 0 1 0 148,152" stroke="#0f6e56" stroke-width="14" fill="none" stroke-linecap="round"/>
+          <line x1="148" y1="48" x2="177" y2="48" stroke="#0f6e56" stroke-width="14" stroke-linecap="round"/>
+          <line x1="148" y1="152" x2="177" y2="152" stroke="#0f6e56" stroke-width="14" stroke-linecap="round"/>
+          <circle cx="173" cy="100" r="5" fill="#0f6e56"/>
+        </svg>
+        Condicio
+      </a>
+      <ul class="nav-links">
+        <li><a href="schema/">Schema</a></li>
+        <li><a href="validator/">Validator</a></li>
+        <li><a href="field-reference.md">Docs</a></li>
+        <li><a href="https://github.com/docfide/condicio">GitHub</a></li>
+        <li><a href="https://www.npmjs.com/package/condicio-schema"><span class="badge badge-npm">npm</span></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-pills">
+        <span class="pill pill-parties">parties</span>
+        <span class="pill pill-clauses">clauses</span>
+        <span class="pill pill-obligations">obligations</span>
+        <span class="pill pill-risks">risks</span>
+        <span class="pill pill-dates">dates</span>
+        <span class="pill pill-financials">financials</span>
+      </div>
+      <h1>Open standard for<br>contract intelligence data</h1>
+      <p class="tagline">Condicio is a JSON Schema 2020-12 standard for what AI extracts from contracts — parties, obligations, risks, financial terms, and more. Open, confidence-aware, and built for interoperability.</p>
+      <div class="hero-actions">
+        <a href="validator/" class="btn btn-primary">Try the Validator</a>
+        <a href="schema/" class="btn btn-secondary">Browse Schema</a>
+        <a href="https://github.com/docfide/condicio" class="btn btn-ghost">GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">Why Condicio?</h2>
+      <p class="section-subtitle">Every CLM platform and AI extraction tool defines its own output format. Condicio gives them a common language.</p>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon" style="background:#ebf5f0;color:#0f6e56;">&#8594;</div>
+          <h3>Extraction-First</h3>
+          <p>Designed for the output of AI contract extraction, not for drafting or execution. Every field can carry a confidence score.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:#eef2ff;color:#4f46e5;">&#8594;</div>
+          <h3>Confidence-Aware</h3>
+          <p>Every extracted value can be traced to its source with field-level confidence scores — essential for AI-generated data.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:#eff6ff;color:#1d4ed8;">&#8594;</div>
+          <h3>Composable</h3>
+          <p>Types are reusable $defs with cross-references. Adopt just the sections you need — a valid document can use as few as three fields.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:#fdf2f8;color:#be185d;">&#8594;</div>
+          <h3>Vendor-Neutral</h3>
+          <p>Apache 2.0 licensed with a community RFC process. No single vendor controls the standard or the data it describes.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:#ecfdf5;color:#047857;">&#8594;</div>
+          <h3>Standards Aligned</h3>
+          <p>ISO 8601 dates, ISO 4217 currencies, BCP 47 languages, JSON Schema 2020-12. Reduces the learning curve for adopters.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:#fffbeb;color:#b45309;">&#8594;</div>
+          <h3>Portable</h3>
+          <p>Use Condicio as an interchange format between CLM platforms, extraction engines, and analytics tools. No more custom field mapping.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="container">
+      <h2 class="section-title">Schema at a Glance</h2>
+      <p class="section-subtitle">Nine top-level sections, composable via $defs, validated by a single JSON Schema 2020-12 document.</p>
+      <div class="code-snippet">
+        <div class="code-snippet-header">
+          <span class="code-dot" style="background:#ef4444;"></span>
+          <span class="code-dot" style="background:#f59e0b;"></span>
+          <span class="code-dot" style="background:#10b981;"></span>
+          <span style="color:var(--slate-400);font-size:0.75rem;margin-left:12px;">schema/condicio.schema.json</span>
+        </div>
+        <div class="code-body"><span class="bracket">{</span>
+  <span class="key">"$schema"</span>: <span class="string">"https://json-schema.org/draft/2020-12/schema"</span>,
+  <span class="key">"$id"</span>: <span class="string">"https://raw.githubusercontent.com/docfide/condicio/main/schema/condicio.schema.json"</span>,
+  <span class="key">"type"</span>: <span class="string">"object"</span>,
+  <span class="key">"required"</span>: [<span class="subkey">"condicio"</span>, <span class="subkey">"specVersion"</span>, <span class="subkey">"contract"</span>, <span class="subkey">"parties"</span>],
+  <span class="key">"properties"</span>: <span class="bracket">{</span>
+    <span class="subkey">"contract"</span>:    <span class="bracket">{</span> <span class="key">"$ref"</span>: <span class="string">"#/$defs/contract"</span> <span class="bracket">}</span>,
+    <span class="subkey">"parties"</span>:     <span class="bracket">{</span> <span class="key">"type"</span>: <span class="string">"array"</span>, <span class="key">"items"</span>: <span class="bracket">{</span> <span class="key">"$ref"</span>: <span class="string">"#/$defs/party"</span> <span class="bracket">}</span> <span class="bracket">}</span>,
+    <span class="subkey">"obligations"</span>: <span class="bracket">{</span> <span class="key">"type"</span>: <span class="string">"array"</span>, <span class="key">"items"</span>: <span class="bracket">{</span> <span class="key">"$ref"</span>: <span class="string">"#/$defs/obligation"</span> <span class="bracket">}</span> <span class="bracket">}</span>,
+    <span class="subkey">"risks"</span>:       <span class="bracket">{</span> <span class="key">"type"</span>: <span class="string">"array"</span>, <span class="key">"items"</span>: <span class="bracket">{</span> <span class="key">"$ref"</span>: <span class="string">"#/$defs/risk"</span> <span class="bracket">}</span> <span class="bracket">}</span>
+  <span class="bracket">}</span>
+<span class="bracket">}</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">Use Cases</h2>
+      <p class="section-subtitle">Condicio serves as the interchange layer for the entire contract intelligence ecosystem.</p>
+      <div class="card-grid">
+        <div class="card">
+          <h3>AI Extraction Output</h3>
+          <p>Any extraction engine can produce Condicio as its canonical output format, decoupling extraction from downstream applications.</p>
+        </div>
+        <div class="card">
+          <h3>CLM Data Portability</h3>
+          <p>Migrate between platforms without custom field mapping. Export from one CLM in Condicio, import into another.</p>
+        </div>
+        <div class="card">
+          <h3>Obligation Tracking</h3>
+          <p>Extract obligations with deadlines, status, and cross-references to source clauses. Feed into task management systems.</p>
+        </div>
+        <div class="card">
+          <h3>Portfolio Analytics</h3>
+          <p>Aggregate contract data across entities and jurisdictions into a unified corpus for cross-portfolio risk and financial analysis.</p>
+        </div>
+        <div class="card">
+          <h3>Regulatory Reporting</h3>
+          <p>Extract compliance-relevant clauses (GDPR, SOX, HIPAA) into structured data for automated reporting and gap analysis.</p>
+        </div>
+        <div class="card">
+          <h3>M&A Due Diligence</h3>
+          <p>Standardized contract data extraction across thousands of target-company contracts during acquisition due diligence.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="container">
+      <h2 class="section-title">Quick Start</h2>
+      <p class="section-subtitle">Validate your first Condicio document in seconds.</p>
+      <div class="card-grid">
+        <div class="card">
+          <h3>npm</h3>
+          <p style="font-family:var(--font-mono);font-size:0.8rem;background:var(--slate-50);padding:8px 12px;border-radius:6px;">npx ajv validate -s schema.json -d document.json</p>
+          <p style="margin-top:12px;">Install the schema package and validate with AJV.</p>
+          <pre style="margin-top:8px;font-size:0.75rem;color:var(--slate-500);">npm install condicio-schema</pre>
+        </div>
+        <div class="card">
+          <h3>Python</h3>
+          <p style="font-family:var(--font-mono);font-size:0.8rem;background:var(--slate-50);padding:8px 12px;border-radius:6px;">pip install condicio</p>
+          <p style="margin-top:12px;">Validate and work with Condicio documents as typed Python objects.</p>
+          <pre style="margin-top:8px;font-size:0.75rem;color:var(--slate-500);">condicio validate document.json</pre>
+        </div>
+        <div class="card">
+          <h3>Browser</h3>
+          <p>Paste a Condicio document into the <a href="validator/">live validator</a> to check it against the schema in real time — no install needed.</p>
+        </div>
+        <div class="card">
+          <h3>GitHub</h3>
+          <p>Clone the repo and run the test suite with existing examples for NDA, service, employment, and license agreements.</p>
+          <pre style="margin-top:8px;font-size:0.75rem;color:var(--slate-500);">git clone https://github.com/docfide/condicio
+cd condicio && npm install && npm test</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">Examples</h2>
+      <p class="section-subtitle">Validated Condicio documents across four common contract types, in JSON and YAML.</p>
+      <table class="examples-table">
+        <thead>
+          <tr><th>Contract Type</th><th>Highlights</th><th>Files</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>NDA</strong></td>
+            <td>Mutual confidentiality, exclusions, survival period, auto-renewal</td>
+            <td><a href="https://github.com/docfide/condicio/blob/main/schema/examples/nda.json">JSON</a> &middot; <a href="https://github.com/docfide/condicio/blob/main/schema/examples/nda.yaml">YAML</a></td>
+          </tr>
+          <tr>
+            <td><strong>Service Agreement</strong></td>
+            <td>$150K milestone payments, IP assignment, liability cap</td>
+            <td><a href="https://github.com/docfide/condicio/blob/main/schema/examples/service-agreement.json">JSON</a> &middot; <a href="https://github.com/docfide/condicio/blob/main/schema/examples/service-agreement.yaml">YAML</a></td>
+          </tr>
+          <tr>
+            <td><strong>Employment Agreement</strong></td>
+            <td>$350K salary + bonus + equity, non-compete, severance</td>
+            <td><a href="https://github.com/docfide/condicio/blob/main/schema/examples/employment-agreement.json">JSON</a> &middot; <a href="https://github.com/docfide/condicio/blob/main/schema/examples/employment-agreement.yaml">YAML</a></td>
+          </tr>
+          <tr>
+            <td><strong>License Agreement</strong></td>
+            <td>$250K license + $50K maintenance, SLA, audit rights</td>
+            <td><a href="https://github.com/docfide/condicio/blob/main/schema/examples/license-agreement.json">JSON</a> &middot; <a href="https://github.com/docfide/condicio/blob/main/schema/examples/license-agreement.yaml">YAML</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="container">
+      <h2 class="section-title">Comparison</h2>
+      <p class="section-subtitle">How Condicio fits in the legal data standards landscape.</p>
+      <div style="overflow-x:auto;">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Standard</th>
+              <th>Focus</th>
+              <th>AI Extraction</th>
+              <th>Confidence</th>
+              <th>Open Standard</th>
+              <th>JSON Schema</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Condicio</strong></td>
+              <td>Contract extraction output</td>
+              <td class="check">&#10003;</td>
+              <td class="check">&#10003;</td>
+              <td class="check">&#10003;</td>
+              <td class="check">&#10003;</td>
+            </tr>
+            <tr>
+              <td>Accord Project</td>
+              <td>Contract drafting</td>
+              <td class="cross">&#8212;</td>
+              <td class="cross">&#8212;</td>
+              <td class="check">&#10003;</td>
+              <td class="check">&#10003;</td>
+            </tr>
+            <tr>
+              <td>SALI</td>
+              <td>Contract metadata tagging</td>
+              <td class="cross">&#8212;</td>
+              <td class="cross">&#8212;</td>
+              <td class="check">&#10003;</td>
+              <td class="cross">&#8212;</td>
+            </tr>
+            <tr>
+              <td>LEDES</td>
+              <td>Legal billing / invoices</td>
+              <td class="cross">&#8212;</td>
+              <td class="cross">&#8212;</td>
+              <td class="check">&#10003;</td>
+              <td class="cross">&#8212;</td>
+            </tr>
+            <tr>
+              <td>LegalXML</td>
+              <td>Court filings</td>
+              <td class="cross">&#8212;</td>
+              <td class="cross">&#8212;</td>
+              <td class="check">&#10003;</td>
+              <td class="cross">&#8212;</td>
+            </tr>
+            <tr>
+              <td>OCDS</td>
+              <td>Public procurement</td>
+              <td class="cross">&#8212;</td>
+              <td class="cross">&#8212;</td>
+              <td class="check">&#10003;</td>
+              <td class="check">&#10003;</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">Governance</h2>
+      <p class="section-subtitle">Open evolution through a community RFC process.</p>
+      <div class="card-grid">
+        <div class="card">
+          <h3>Proposal</h3>
+          <p>Anyone opens a GitHub issue using the <a href="https://github.com/docfide/condicio/issues/new?template=rfc.yml">RFC template</a> with motivation, schema diff, example document, and backward compatibility analysis.</p>
+        </div>
+        <div class="card">
+          <h3>Discussion</h3>
+          <p>Minimum 7-day open comment period. Community feedback on scope, naming, and alignment with existing conventions.</p>
+        </div>
+        <div class="card">
+          <h3>Review &amp; Decision</h3>
+          <p>Maintainer validates schema correctness, example conformance, and documentation. Accept, reject, or defer to a future major version.</p>
+        </div>
+        <div class="card">
+          <h3>Versioning</h3>
+          <p>Semantic versioning: MAJOR for breaking changes, MINOR for additive changes, PATCH for fixes. Backward compatibility guaranteed within minor versions.</p>
+        </div>
+      </div>
+      <p style="text-align:center;margin-top:24px;"><a href="governance.md" class="btn btn-ghost">Read the full governance docs</a></p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="container" style="text-align:center;">
+      <h2 class="section-title">Get Involved</h2>
+      <p class="section-subtitle" style="margin:0 auto 32px;">Condicio is an open project built by <a href="https://docfide.com">Docfide</a>. Contributions welcome.</p>
+      <div class="hero-actions">
+        <a href="https://github.com/docfide/condicio" class="btn btn-primary">GitHub</a>
+        <a href="https://www.npmjs.com/package/condicio-schema" class="btn btn-secondary">npm</a>
+        <a href="https://github.com/docfide/condicio/blob/main/CONTRIBUTING.md" class="btn btn-ghost">Contributing Guide</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="footer-brand">Condicio</div>
+        <p>Open standard for contract intelligence data. Released under the Apache 2.0 license.</p>
+        <p style="margin-top:8px;font-size:0.8rem;">A project of <a href="https://tensflare.com" style="color:var(--slate-400);">Tensflare Ltd</a>.</p>
+      </div>
+      <div>
+        <h4>Schema</h4>
+        <ul>
+          <li><a href="schema/">Browse</a></li>
+          <li><a href="validator/">Validator</a></li>
+          <li><a href="field-reference.md">Reference</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Community</h4>
+        <ul>
+          <li><a href="https://github.com/docfide/condicio">GitHub</a></li>
+          <li><a href="governance.md">Governance</a></li>
+          <li><a href="https://github.com/docfide/condicio/blob/main/CONTRIBUTING.md">Contributing</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>About</h4>
+        <ul>
+          <li><a href="https://docfide.com">Docfide</a></li>
+
+          <li><a href="https://github.com/docfide/condicio/blob/main/LICENSE">License</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

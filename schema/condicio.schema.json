@@ -18,7 +18,7 @@
     "specVersion": {
       "description": "Version of the Condicio specification this document conforms to.",
       "type": "string",
-      "enum": ["0.1.0"]
+      "enum": ["0.1.0", "0.1.4"]
     },
     "id": {
       "description": "Unique identifier for this contract document (UUID, URI, or application-specific ID).",
@@ -264,7 +264,7 @@
     "date": {
       "description": "A date string in ISO 8601 format (YYYY-MM-DD) or full datetime.",
       "type": "string",
-      "oneOf": [
+      "anyOf": [
         { "format": "date" },
         { "format": "date-time" }
       ]

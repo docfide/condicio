@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Validator — Condicio</title>
+  <meta name="description" content="Validate Condicio contract intelligence documents against the schema in real time using AJV.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><path d='M148,48A70,70 0 1 0 148,152' stroke='%230f6e56' stroke-width='14' fill='none' stroke-linecap='round'/><line x1='148' y1='48' x2='177' y2='48' stroke='%230f6e56' stroke-width='14' stroke-linecap='round'/><line x1='148' y1='152' x2='177' y2='152' stroke='%230f6e56' stroke-width='14' stroke-linecap='round'/></svg>">
+  <script src="https://cdn.jsdelivr.net/npm/ajv@8/dist/ajv.min.js" onerror="document.getElementById('schema-tree') && null; document.getElementById('results').innerHTML='<div class=result-fail><h4>Failed to load AJV</h4><ul><li>Could not load the AJV validation library from CDN. Check your internet connection or try again later.</li></ul></div>'"></script>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="nav-brand">
+        <svg class="nav-logo" viewBox="0 0 200 200">
+          <path d="M148,48A70,70 0 1 0 148,152" stroke="#0f6e56" stroke-width="14" fill="none" stroke-linecap="round"/>
+          <line x1="148" y1="48" x2="177" y2="48" stroke="#0f6e56" stroke-width="14" stroke-linecap="round"/>
+          <line x1="148" y1="152" x2="177" y2="152" stroke="#0f6e56" stroke-width="14" stroke-linecap="round"/>
+          <circle cx="173" cy="100" r="5" fill="#0f6e56"/>
+        </svg>
+        Condicio
+      </a>
+      <ul class="nav-links">
+        <li><a href="../schema/">Schema</a></li>
+        <li><a href="../validator/" class="active">Validator</a></li>
+        <li><a href="../field-reference.md">Docs</a></li>
+        <li><a href="https://github.com/docfide/condicio">GitHub</a></li>
+        <li><a href="https://www.npmjs.com/package/condicio-schema"><span class="badge badge-npm">npm</span></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>Live Schema Validator</h1>
+      <p>Paste a Condicio JSON document on the left and validate it against the schema in real time. No data leaves your browser — validation runs entirely client-side via AJV.</p>
+    </div>
+  </div>
+
+  <div class="section" style="padding-top:0;">
+    <div class="container">
+      <div style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <div class="validator-toolbar">
+          <button class="btn btn-secondary" onclick="loadExample('nda')">NDA</button>
+          <button class="btn btn-secondary" onclick="loadExample('service')">Service Agreement</button>
+          <button class="btn btn-secondary" onclick="loadExample('employment')">Employment Agreement</button>
+          <button class="btn btn-secondary" onclick="loadExample('license')">License Agreement</button>
+        </div>
+        <button class="btn btn-ghost" onclick="clearEditor()">Clear</button>
+      </div>
+      <div class="validator-layout">
+        <div class="validator-panel">
+          <div class="validator-panel-header">
+            <span>JSON Input</span>
+            <span id="status-badge" style="font-size:0.75rem;color:var(--slate-400);"></span>
+          </div>
+          <div class="validator-panel-body">
+            <textarea id="json-input" placeholder='Paste a Condicio JSON document here...' spellcheck="false"></textarea>
+          </div>
+        </div>
+        <div class="validator-panel">
+          <div class="validator-panel-header">
+            <span>Validation Results</span>
+            <span id="result-time" style="font-size:0.75rem;color:var(--slate-400);"></span>
+          </div>
+          <div class="validator-panel-body">
+            <div class="validator-results" id="results">
+              <div class="result-empty" id="empty-state">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M9 12h6m-3-3v6m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                <p>Enter a JSON document to validate.</p>
+                <p style="margin-top:8px;font-size:0.85rem;">Try loading an example above.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="footer-brand">Condicio</div>
+        <p>Open standard for contract intelligence data. Released under the Apache 2.0 license.</p>
+        <p style="margin-top:8px;font-size:0.8rem;">A project of <a href="https://tensflare.com" style="color:var(--slate-400);">Tensflare Ltd</a>.</p>
+      </div>
+      <div>
+        <h4>Schema</h4>
+        <ul>
+          <li><a href="../schema/">Browse</a></li>
+          <li><a href="../validator/">Validator</a></li>
+          <li><a href="../field-reference.md">Reference</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Community</h4>
+        <ul>
+          <li><a href="https://github.com/docfide/condicio">GitHub</a></li>
+          <li><a href="../governance.md">Governance</a></li>
+          <li><a href="https://github.com/docfide/condicio/blob/main/CONTRIBUTING.md">Contributing</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>About</h4>
+        <ul>
+          <li><a href="https://docfide.com">Docfide</a></li>
+
+          <li><a href="https://github.com/docfide/condicio/blob/main/LICENSE">License</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  // Inline format validators (replaces ajv-formats for browser use)
+  const FORMATS = {
+    'date': function(s) { return /^\d{4}-\d{2}-\d{2}$/.test(s) && !isNaN(Date.parse(s)); },
+    'date-time': function(s) { return !isNaN(Date.parse(s)) && s.includes('T'); },
+    'uri': function(s) { try { return new URL(s) && true; } catch(e) { return false; } },
+    'email': function(s) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); },
+  };
+
+  const SCHEMA_URL = 'https://raw.githubusercontent.com/docfide/condicio/main/schema/condicio.schema.json';
+  const EXAMPLE_BASE = 'https://raw.githubusercontent.com/docfide/condicio/main/schema/examples';
+
+  let validator = null;
+  let schemaLoaded = false;
+
+  const textarea = document.getElementById('json-input');
+  const resultsDiv = document.getElementById('results');
+  const emptyState = document.getElementById('empty-state');
+  const statusBadge = document.getElementById('status-badge');
+  const resultTime = document.getElementById('result-time');
+
+  async function initValidator() {
+    try {
+      const res = await fetch(SCHEMA_URL);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const schema = await res.json();
+
+      const ajv = new Ajv({ allErrors: true, verbose: true });
+      // Register inline format validators
+      for (const [name, fn] of Object.entries(FORMATS)) {
+        ajv.addFormat(name, fn);
+      }
+      validator = ajv.compile(schema);
+      schemaLoaded = true;
+
+      statusBadge.textContent = 'Schema loaded';
+      statusBadge.style.color = 'var(--teal-600)';
+
+    } catch (err) {
+      const isFileProtocol = window.location.protocol === 'file:';
+      if (isFileProtocol) {
+        resultsDiv.innerHTML = '<div class="result-fail"><h4>Not available when opened as a local file</h4><ul><li>The validator needs a web server to load the schema and AJV library. Use GitHub Pages or run a local server: <code>npx serve docs/</code></li></ul></div>';
+      } else {
+        resultsDiv.innerHTML = '<div class="result-fail"><h4>Failed to load schema</h4><ul><li>' + escapeHtml(err.message) + '</li></ul></div>';
+      }
+    }
+  }
+
+  function validate() {
+    if (!schemaLoaded) {
+      resultsDiv.innerHTML = '<div style="padding:20px;text-align:center;color:var(--slate-500);"><div class="loading-spinner"></div><p style="margin-top:8px;">Loading schema...</p></div>';
+      return;
+    }
+
+    const input = textarea.value.trim();
+    if (!input) {
+      resultsDiv.innerHTML = emptyState.outerHTML;
+      resultTime.textContent = '';
+      return;
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(input);
+    } catch (e) {
+      resultsDiv.innerHTML = '<div class="result-fail"><h4>Invalid JSON</h4><ul><li>' + escapeHtml(e.message) + '</li></ul></div>';
+      resultTime.textContent = '';
+      return;
+    }
+
+    const start = performance.now();
+    const valid = validator(parsed);
+    const elapsed = ((performance.now() - start) / 1000).toFixed(2) + 's';
+    resultTime.textContent = elapsed;
+
+    if (valid) {
+      resultsDiv.innerHTML = '<div class="result-pass">' +
+        '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>' +
+        'Valid Condicio document</div>';
+    } else {
+      let html = '<div class="result-fail"><h4>' + validator.errors.length + ' validation error' + (validator.errors.length !== 1 ? 's' : '') + '</h4><ul>';
+      for (const err of validator.errors) {
+        const path = err.instancePath || '(root)';
+        html += '<li><strong>' + escapeHtml(path) + '</strong>: ' + escapeHtml(err.message);
+        if (err.params && err.params.allowedValues) {
+          html += ' (allowed: ' + err.params.allowedValues.map(v => escapeHtml(JSON.stringify(v))).join(', ') + ')';
+        }
+        if (err.params && err.params.additionalProperty) {
+          html += ' (' + escapeHtml(err.params.additionalProperty) + ')';
+        }
+        html += '</li>';
+      }
+      html += '</ul></div>';
+      resultsDiv.innerHTML = html;
+    }
+  }
+
+  let debounceTimer;
+  textarea.addEventListener('input', function() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(validate, 300);
+  });
+
+  async function loadExample(type) {
+    const files = {
+      nda: 'nda.json',
+      service: 'service-agreement.json',
+      employment: 'employment-agreement.json',
+      license: 'license-agreement.json'
+    };
+    const file = files[type];
+    if (!file) return;
+
+    statusBadge.textContent = 'Loading example...';
+    statusBadge.style.color = 'var(--slate-500)';
+
+    try {
+      const res = await fetch(EXAMPLE_BASE + '/' + file);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const text = await res.text();
+      textarea.value = text;
+      validate();
+    } catch (err) {
+      resultsDiv.innerHTML = '<div class="result-fail"><h4>Failed to load example</h4><ul><li>' + escapeHtml(err.message) + '</li></ul></div>';
+    }
+  }
+
+  function clearEditor() {
+    textarea.value = '';
+    resultsDiv.innerHTML = emptyState.outerHTML;
+    resultTime.textContent = '';
+    statusBadge.textContent = '';
+    textarea.focus();
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  window.loadExample = loadExample;
+  window.clearEditor = clearEditor;
+
+  initValidator();
+  </script>
+
+</body>
+</html>
