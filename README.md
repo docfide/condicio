@@ -222,5 +222,4 @@ Apache 2.0. See [LICENSE](LICENSE).
 
 ---
 
-Built by [Docfide](https://docfide.com).  
-Condicio is a trademark of Docfide Inc.
+Built by [Docfide](https://docfide.com).
