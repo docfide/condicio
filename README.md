@@ -1,5 +1,9 @@
 # Condicio Schema
 
+<p align="center">
+  <img src=".github/social-preview.png" alt="Condicio Banner" width="800" style="max-width: 100%; border-radius: 8px;" />
+</p>
+
 **Open standard for contract intelligence data — parties, clauses, obligations, risks, dates, and financial terms.**
 
 [![npm](https://img.shields.io/npm/v/condicio-schema)](https://www.npmjs.com/package/condicio-schema)
