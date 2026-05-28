@@ -1,0 +1,265 @@
+condicio: https://condicio.dev/schema/condicio.schema.json
+specVersion: "0.1.0"
+id: "urn:uuid:4a5b6c7d-8e9f-0a1b-2c3d-4e5f6a7b8c9d"
+contract:
+  title: Enterprise Software License Agreement
+  type: License Agreement
+  description: Perpetual software license agreement between SoftSys Inc and MegaCorp for enterprise analytics platform.
+  language: en
+  jurisdiction: Massachusetts
+  governingLaw: This Agreement shall be governed by the laws of the Commonwealth of Massachusetts.
+  status: executed
+  contractId: LA-2026-0331
+  executionDate: "2026-03-31"
+  effectiveDate: "2026-04-01"
+  expiryDate: "2027-03-31"
+  renewalTerms: Annual maintenance and support renews automatically unless canceled 60 days prior.
+
+parties:
+  - id: party-softsys
+    name: SoftSys Inc
+    alias: SoftSys
+    role: licensor
+    type: corporation
+    jurisdiction: Delaware
+    contact:
+      address:
+        street: 500 Tech Square
+        city: Cambridge
+        stateOrProvince: MA
+        postalCode: "02142"
+        country: US
+
+  - id: party-megacorp
+    name: MegaCorp Industries
+    alias: MegaCorp
+    role: licensee
+    type: corporation
+    jurisdiction: Illinois
+    contact:
+      address:
+        street: 2000 Lakeshore Drive
+        city: Chicago
+        stateOrProvince: IL
+        postalCode: "60601"
+        country: US
+
+dates:
+  - label: execution
+    date: "2026-03-31"
+    description: Date both parties signed.
+  - label: effective
+    date: "2026-04-01"
+    description: License effective date.
+  - label: expiry
+    date: "2027-03-31"
+    description: Initial license term (1 year).
+  - label: maintenance renewal
+    date: "2027-03-31"
+    description: Annual maintenance renewal date (auto-renews).
+
+clauses:
+  - id: "1"
+    title: Grant of License
+    text: SoftSys grants MegaCorp a non-exclusive, non-transferable, perpetual license to use the Enterprise Analytics Platform for up to 500 named users. License is for internal business use only.
+    type: license grant
+    confidence: 0.98
+
+  - id: "2"
+    title: License Fee
+    text: MegaCorp shall pay a one-time license fee of $250,000 USD. Annual maintenance and support is $50,000, payable in advance.
+    type: payment
+    confidence: 0.99
+
+  - id: "3"
+    title: Maintenance and Support
+    text: SoftSys shall provide standard maintenance and support including bug fixes, security patches, and email/phone support during business hours with a 4-hour response SLA for critical issues.
+    type: service
+    confidence: 0.97
+
+  - id: "4"
+    title: Usage Restrictions
+    text: "MegaCorp shall not (a) sublicense, sell, or distribute the software; (b) reverse engineer or modify the software; (c) exceed the licensed user count; (d) use the software for third-party benefit or as a service bureau."
+    type: restriction
+    confidence: 0.98
+
+  - id: "5"
+    title: Audit Rights
+    text: SoftSys may audit MegaCorp's usage upon 10 days notice, not more than once per year. If audit reveals under-licensing, MegaCorp shall pay the shortfall plus 15% penalty.
+    type: compliance
+    confidence: 0.96
+
+  - id: "6"
+    title: Warranty and Disclaimer
+    text: SoftSys warrants the software will substantially conform to documentation for 90 days. ALL OTHER WARRANTIES ARE DISCLAIMED, INCLUDING IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.
+    type: warranty
+    confidence: 0.98
+
+  - id: "7"
+    title: Limitation of Liability
+    text: Neither party's total liability shall exceed the license fees paid in the 12 months preceding the claim. Neither party shall be liable for indirect, consequential, or lost profits damages.
+    type: liability
+    confidence: 0.99
+
+  - id: "8"
+    title: Term and Termination
+    text: The license is perpetual. Maintenance is annual. Either party may terminate for material breach uncured within 30 days. Upon termination of maintenance, the perpetual license survives.
+    type: termination
+    confidence: 0.97
+
+obligations:
+  - id: obl-1
+    description: Grant non-exclusive, perpetual license for 500 users.
+    obligor: SoftSys Inc
+    beneficiary: MegaCorp Industries
+    type: license
+    deadlineType: ongoing
+    status: pending
+    clauseRef: "1"
+    confidence: 0.98
+
+  - id: obl-2
+    description: Pay $250,000 one-time license fee.
+    obligor: MegaCorp Industries
+    beneficiary: SoftSys Inc
+    type: payment
+    deadlineType: "fixed date"
+    fixedDate: "2026-04-01"
+    status: fulfilled
+    clauseRef: "2"
+    confidence: 0.99
+
+  - id: obl-3
+    description: Pay $50,000 annual maintenance and support fee.
+    obligor: MegaCorp Industries
+    beneficiary: SoftSys Inc
+    type: payment
+    deadlineType: "fixed date"
+    fixedDate: "2027-04-01"
+    status: pending
+    clauseRef: "2"
+    confidence: 0.99
+
+  - id: obl-4
+    description: Provide standard support with 4-hour SLA for critical issues.
+    obligor: SoftSys Inc
+    beneficiary: MegaCorp Industries
+    type: service
+    deadlineType: ongoing
+    status: pending
+    clauseRef: "3"
+    confidence: 0.97
+
+  - id: obl-5
+    description: Not sublicense, sell, reverse engineer, or exceed licensed user count.
+    obligor: MegaCorp Industries
+    beneficiary: SoftSys Inc
+    type: restriction
+    deadlineType: ongoing
+    status: pending
+    clauseRef: "4"
+    confidence: 0.98
+
+  - id: obl-6
+    description: Submit to audit upon 10 days notice, pay shortfall plus 15% if under-licensed.
+    obligor: MegaCorp Industries
+    beneficiary: SoftSys Inc
+    type: compliance
+    deadlineType: conditional
+    status: pending
+    clauseRef: "5"
+    confidence: 0.96
+
+  - id: obl-7
+    description: Ensure software substantially conforms to documentation for 90 days.
+    obligor: SoftSys Inc
+    beneficiary: MegaCorp Industries
+    type: warranty
+    deadlineType: "fixed date"
+    fixedDate: "2026-06-30"
+    status: pending
+    clauseRef: "6"
+    confidence: 0.98
+
+financials:
+  currency: USD
+  totalContractValue: 250000
+  terms:
+    - label: license fee
+      amount: 250000
+      period: one-time
+      description: Perpetual license fee for Enterprise Analytics Platform.
+    - label: annual maintenance
+      amount: 50000
+      period: annually
+      description: Annual maintenance and support fee.
+  paymentSchedule:
+    - amount: 250000
+      dueDate: "2026-04-01"
+      description: One-time license fee
+      status: paid
+    - amount: 50000
+      dueDate: "2027-04-01"
+      description: Annual maintenance renewal
+      status: pending
+  paymentTerms: Net 30
+
+risks:
+  - id: risk-1
+    description: Warranty is only 90 days and disclaims all implied warranties.
+    severity: high
+    category: legal
+    impact: MegaCorp bears the risk of software defects after 90 days.
+    affectedParty: MegaCorp Industries
+    clauseRef: "6"
+    confidence: 0.92
+  - id: risk-2
+    description: Liability cap at fees paid in preceding 12 months may be insufficient.
+    severity: high
+    category: legal
+    impact: MegaCorp's recovery capped at $250,000 even for data breach or IP infringement.
+    affectedParty: MegaCorp Industries
+    clauseRef: "7"
+    confidence: 0.90
+  - id: risk-3
+    description: Audit penalty of 15% is relatively low.
+    severity: low
+    category: operational
+    impact: SoftSys has incentive to audit frequently.
+    affectedParty: MegaCorp Industries
+    clauseRef: "5"
+    confidence: 0.82
+  - id: risk-4
+    description: No data protection or indemnification for third-party IP claims.
+    severity: critical
+    category: legal
+    impact: MegaCorp has no contractual protection for IP infringement or data mishandling.
+    affectedParty: MegaCorp Industries
+    confidence: 0.88
+
+definitions:
+  - term: Enterprise Analytics Platform
+    definition: SoftSys's proprietary business intelligence and analytics software as described in the Documentation.
+    clauseRef: "1"
+  - term: Documentation
+    definition: The user manuals, technical specifications, and other documentation provided by SoftSys with the software.
+    clauseRef: "6"
+
+metadata:
+  extractedAt: "2026-05-25T19:00:00Z"
+  extractedBy: Docfide Engine
+  extractionEngine:
+    name: docfide-extract
+    version: "0.4.2"
+  confidence: 0.94
+  sourceDocument:
+    filename: SoftSys_MegaCorp_License_Agreement.pdf
+    mediaType: application/pdf
+    size: 356352
+    pages: 14
+  tags:
+    - software-license
+    - enterprise
+    - perpetual
+    - maintenance
+    - on-premise

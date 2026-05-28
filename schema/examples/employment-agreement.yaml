@@ -1,0 +1,263 @@
+condicio: https://condicio.dev/schema/condicio.schema.json
+specVersion: "0.1.0"
+id: "urn:uuid:9d1b3c5e-7f8a-4b2c-9d0e-1f2a3b4c5d6e"
+contract:
+  title: Executive Employment Agreement
+  type: Employment Agreement
+  description: Employment agreement between Globex Corp and Jane Smith for the role of Chief Technology Officer.
+  language: en
+  jurisdiction: New York
+  governingLaw: This Agreement shall be governed by the laws of the State of New York.
+  status: executed
+  contractId: EA-2026-078
+  executionDate: "2026-01-15"
+  effectiveDate: "2026-02-01"
+  expiryDate: "2029-01-31"
+  renewalTerms: Agreement renews automatically for successive one-year terms unless either party provides 60 days notice.
+
+parties:
+  - id: party-globex
+    name: Globex Corporation
+    alias: Globex
+    role: employer
+    type: corporation
+    jurisdiction: Delaware
+    contact:
+      address:
+        street: 1 Globex Plaza
+        city: New York
+        stateOrProvince: NY
+        postalCode: "10001"
+        country: US
+
+  - id: party-jane
+    name: Jane Smith
+    alias: Employee
+    role: employee
+    type: individual
+    contact:
+      address:
+        street: 42 Maple Drive
+        city: Brooklyn
+        stateOrProvince: NY
+        postalCode: "11201"
+        country: US
+
+dates:
+  - label: execution
+    date: "2026-01-15"
+    description: Date signed.
+  - label: effective
+    date: "2026-02-01"
+    description: Employment start date.
+  - label: expiry
+    date: "2029-01-31"
+    description: Initial three-year term.
+  - label: probation end
+    date: "2026-05-01"
+    description: End of 90-day probationary period.
+  - label: notice deadline
+    date: "2028-12-02"
+    description: Last date for non-renewal notice.
+
+clauses:
+  - id: "1"
+    title: Position and Duties
+    text: Employee shall serve as Chief Technology Officer, reporting to the CEO. Employee shall perform duties customary to the role and as reasonably assigned.
+    type: scope
+    confidence: 0.98
+
+  - id: "2"
+    title: Compensation
+    text: Employee shall receive an annual base salary of $350,000, payable semi-monthly. Employee is eligible for an annual performance bonus of up to 40% of base salary, based on KPIs set by the Board.
+    type: payment
+    confidence: 0.99
+
+  - id: "3"
+    title: Benefits
+    text: "Employee shall be eligible for health insurance, 401(k) matching up to 5%, 20 days paid time off annually, stock options for 10,000 shares vesting over 4 years, and an annual education budget of $5,000."
+    type: benefits
+    confidence: 0.97
+
+  - id: "4"
+    title: At-Will Employment
+    text: Employment is at-will. Either party may terminate at any time with or without cause upon 30 days written notice.
+    type: termination
+    confidence: 0.99
+
+  - id: "5"
+    title: Severance
+    text: In the event of termination without cause or resignation for good reason, Employee shall receive six months base salary continuation and continued health benefits for six months.
+    type: severance
+    confidence: 0.96
+
+  - id: "6"
+    title: Confidentiality
+    text: Employee shall not disclose or use any Confidential Information during or after employment for a period of five years.
+    type: confidentiality
+    confidence: 0.98
+
+  - id: "7"
+    title: Non-Compete
+    text: Employee agrees not to engage in any business competitive with Globex within a 50-mile radius for 12 months following termination.
+    type: non-compete
+    confidence: 0.97
+
+  - id: "8"
+    title: Intellectual Property
+    text: All inventions, discoveries, and work product created by Employee during employment shall be the sole property of Globex. Employee hereby assigns all rights therein.
+    type: ip
+    confidence: 0.98
+
+obligations:
+  - id: obl-1
+    description: Serve as CTO and perform customary duties.
+    obligor: Jane Smith
+    beneficiary: Globex Corporation
+    type: service
+    deadlineType: ongoing
+    status: pending
+    clauseRef: "1"
+    confidence: 0.98
+
+  - id: obl-2
+    description: Pay $350,000 annual base salary semi-monthly.
+    obligor: Globex Corporation
+    beneficiary: Jane Smith
+    type: payment
+    deadlineType: recurring
+    status: pending
+    clauseRef: "2"
+    confidence: 0.99
+
+  - id: obl-3
+    description: Maintain health insurance and 401(k) matching.
+    obligor: Globex Corporation
+    beneficiary: Jane Smith
+    type: benefits
+    deadlineType: ongoing
+    status: pending
+    clauseRef: "3"
+    confidence: 0.97
+
+  - id: obl-4
+    description: Pay six months severance if terminated without cause.
+    obligor: Globex Corporation
+    beneficiary: Jane Smith
+    type: payment
+    deadlineType: conditional
+    status: pending
+    clauseRef: "5"
+    confidence: 0.96
+
+  - id: obl-5
+    description: Maintain confidentiality of Globex information for five years.
+    obligor: Jane Smith
+    beneficiary: Globex Corporation
+    type: confidentiality
+    deadlineType: "fixed date"
+    fixedDate: "2031-01-31"
+    status: pending
+    clauseRef: "6"
+    confidence: 0.98
+
+  - id: obl-6
+    description: Abide by 12-month non-compete within 50-mile radius.
+    obligor: Jane Smith
+    beneficiary: Globex Corporation
+    type: non-compete
+    deadlineType: "days from event"
+    daysFromEvent: 365
+    status: pending
+    clauseRef: "7"
+    confidence: 0.97
+
+  - id: obl-7
+    description: Assign all inventions and IP created during employment.
+    obligor: Jane Smith
+    beneficiary: Globex Corporation
+    type: ip
+    deadlineType: ongoing
+    status: pending
+    clauseRef: "8"
+    confidence: 0.98
+
+financials:
+  currency: USD
+  totalContractValue: 1050000
+  terms:
+    - label: base salary
+      amount: 350000
+      period: annually
+      description: Annual base salary for CTO role.
+    - label: target bonus
+      amount: 140000
+      period: annually
+      description: Maximum annual performance bonus (40% of base salary).
+    - label: 401k match
+      amount: 17500
+      period: annually
+      description: Maximum 401(k) employer matching contribution.
+    - label: stock options
+      amount: 10000
+      period: one-time
+      description: 10,000 stock options vesting over 4 years.
+  paymentSchedule:
+    - amount: 14583.33
+      dueDate: "2026-02-15"
+      description: Semi-monthly salary payment
+      status: paid
+
+risks:
+  - id: risk-1
+    description: Non-compete may be unenforceable under NY law.
+    severity: medium
+    category: legal
+    impact: Employee may challenge 12-month, 50-mile restriction.
+    affectedParty: Globex Corporation
+    clauseRef: "7"
+    confidence: 0.75
+
+  - id: risk-2
+    description: No non-solicitation clause for employees or clients.
+    severity: medium
+    category: operational
+    impact: Employee could solicit Globex employees or clients after departure.
+    affectedParty: Globex Corporation
+    confidence: 0.85
+
+  - id: risk-3
+    description: Severance not contingent on signing a release.
+    severity: low
+    category: legal
+    impact: Globex must pay severance without a general release of claims.
+    affectedParty: Globex Corporation
+    clauseRef: "5"
+    confidence: 0.90
+
+definitions:
+  - term: Confidential Information
+    definition: Non-public information including trade secrets, business plans, financial data, customer lists, and technical know-how.
+    clauseRef: "6"
+  - term: Good Reason
+    definition: Material reduction in duties, relocation over 25 miles, or material reduction in compensation without Employee's consent.
+    clauseRef: "5"
+
+metadata:
+  extractedAt: "2026-05-25T18:00:00Z"
+  extractedBy: Docfide Engine
+  extractionEngine:
+    name: docfide-extract
+    version: "0.4.2"
+  confidence: 0.93
+  sourceDocument:
+    filename: Globex_Jane_Smith_Employment_Agreement.pdf
+    mediaType: application/pdf
+    size: 401920
+    pages: 15
+  tags:
+    - employment
+    - executive
+    - cto
+    - non-compete
+    - severance
