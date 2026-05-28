@@ -153,6 +153,18 @@
             "$ref": "#/$defs/financialTerm"
           }
         },
+        "totalContractValue": {
+          "description": "Total contract value in the default currency.",
+          "type": "number"
+        },
+        "paymentTerms": {
+          "description": "Standard payment terms (e.g. Net 30, Net 60).",
+          "type": "string"
+        },
+        "latePaymentPenalty": {
+          "description": "Late payment penalty or interest rate.",
+          "type": "string"
+        },
         "paymentSchedule": {
           "description": "Structured payment schedule if applicable.",
           "type": "array",
@@ -510,6 +522,10 @@
         "dueDate": { "$ref": "#/$defs/date" },
         "amount": { "type": "number" },
         "description": { "type": "string" },
+        "condition": {
+          "description": "Condition or trigger for this payment.",
+          "type": "string"
+        },
         "status": {
           "type": "string",
           "enum": ["pending", "paid", "overdue", "cancelled"]

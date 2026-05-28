@@ -1,0 +1,219 @@
+condicio: https://condicio.dev/schema/condicio.schema.json
+specVersion: "0.1.0"
+id: "urn:uuid:7e2f4a8b-1c3d-4e5f-9a0b-6c7d8e9f1a2b"
+contract:
+  title: Software Development Services Agreement
+  type: Service Agreement
+  description: Agreement between TechCorp and DevStudio for development of a mobile application.
+  language: en
+  jurisdiction: California
+  governingLaw: This Agreement shall be governed by the laws of the State of California.
+  status: executed
+  contractId: SA-2026-0101
+  executionDate: "2026-04-01"
+  effectiveDate: "2026-04-01"
+  expiryDate: "2026-12-31"
+  renewalTerms: May be renewed by mutual written agreement of both parties.
+
+parties:
+  - id: party-techcorp
+    name: TechCorp Inc
+    alias: TechCorp
+    role: client
+    type: corporation
+    jurisdiction: Delaware
+    contact:
+      address:
+        street: 100 Market Street
+        city: San Francisco
+        stateOrProvince: CA
+        postalCode: "94105"
+        country: US
+
+  - id: party-devstudio
+    name: DevStudio LLC
+    alias: DevStudio
+    role: provider
+    type: llc
+    jurisdiction: New York
+    contact:
+      address:
+        street: 200 Broadway
+        city: New York
+        stateOrProvince: NY
+        postalCode: "10012"
+        country: US
+
+dates:
+  - label: execution
+    date: "2026-04-01"
+    description: Date both parties signed.
+  - label: effective
+    date: "2026-04-01"
+    description: Effective date of the agreement.
+  - label: expiry
+    date: "2026-12-31"
+    description: Term end date (9 months).
+  - label: delivery milestone 1
+    date: "2026-06-01"
+    description: Alpha release due date.
+  - label: delivery milestone 2
+    date: "2026-09-01"
+    description: Beta release due date.
+  - label: final delivery
+    date: "2026-11-01"
+    description: Final delivery and acceptance deadline.
+
+clauses:
+  - id: "1"
+    title: Scope of Services
+    text: DevStudio shall develop a mobile application for TechCorp as described in Exhibit A. DevStudio will provide project management, UI/UX design, backend development, and QA testing.
+    type: scope
+    confidence: 0.98
+
+  - id: "2"
+    title: Compensation
+    text: "TechCorp shall pay DevStudio a fixed fee of $150,000 USD, payable in three milestones: $50,000 upon signing, $50,000 upon alpha delivery, and $50,000 upon final acceptance."
+    type: payment
+    confidence: 0.99
+
+  - id: "3"
+    title: Intellectual Property
+    text: All work product created under this Agreement shall be the sole and exclusive property of TechCorp. DevStudio assigns all right, title, and interest in the work product to TechCorp.
+    type: ip
+    confidence: 0.97
+
+  - id: "4"
+    title: Confidentiality
+    text: Each party agrees to hold the other's Confidential Information in strict confidence for a period of three years from the date of disclosure.
+    type: confidentiality
+    confidence: 0.96
+
+  - id: "5"
+    title: Limitation of Liability
+    text: Neither party shall be liable for indirect, consequential, or incidental damages. DevStudio's total liability shall not exceed the total fees paid under this Agreement.
+    type: liability
+    confidence: 0.98
+
+  - id: "6"
+    title: Termination for Convenience
+    text: Either party may terminate this Agreement upon 30 days written notice. In the event of termination, TechCorp shall pay DevStudio for all work completed through the termination date.
+    type: termination
+    confidence: 0.95
+
+obligations:
+  - id: obl-1
+    description: Develop mobile application as described in Exhibit A.
+    obligor: DevStudio LLC
+    beneficiary: TechCorp Inc
+    type: deliverable
+    deadlineType: "fixed date"
+    fixedDate: "2026-11-01"
+    status: pending
+    clauseRef: "1"
+    confidence: 0.98
+
+  - id: obl-2
+    description: Pay $50,000 upon signing of the agreement.
+    obligor: TechCorp Inc
+    beneficiary: DevStudio LLC
+    type: payment
+    deadlineType: "fixed date"
+    fixedDate: "2026-04-01"
+    status: fulfilled
+    clauseRef: "2"
+    confidence: 0.99
+
+  - id: obl-3
+    description: Pay $50,000 upon alpha delivery milestone.
+    obligor: TechCorp Inc
+    beneficiary: DevStudio LLC
+    type: payment
+    deadlineType: "fixed date"
+    fixedDate: "2026-06-01"
+    status: pending
+    clauseRef: "2"
+    confidence: 0.99
+
+  - id: obl-4
+    description: Pay $50,000 upon final acceptance.
+    obligor: TechCorp Inc
+    beneficiary: DevStudio LLC
+    type: payment
+    deadlineType: "fixed date"
+    fixedDate: "2026-11-01"
+    status: pending
+    clauseRef: "2"
+    confidence: 0.99
+
+  - id: obl-5
+    description: Assign all IP rights in work product to TechCorp.
+    obligor: DevStudio LLC
+    beneficiary: TechCorp Inc
+    type: ip
+    deadlineType: ongoing
+    status: pending
+    clauseRef: "3"
+    confidence: 0.97
+
+financials:
+  currency: USD
+  totalContractValue: 150000
+  paymentTerms: Net 30
+  latePaymentPenalty: 1.5% per month on outstanding balance
+  paymentSchedule:
+    - amount: 50000
+      dueDate: "2026-04-01"
+      description: Signing milestone
+      condition: Upon execution of the agreement
+    - amount: 50000
+      dueDate: "2026-06-01"
+      description: Alpha delivery milestone
+      condition: Upon successful alpha delivery and acceptance
+    - amount: 50000
+      dueDate: "2026-11-01"
+      description: Final delivery milestone
+      condition: Upon final acceptance of all work product
+
+risks:
+  - id: risk-1
+    description: Limitation of liability caps DevStudio's liability at fees paid.
+    severity: high
+    category: legal
+    impact: TechCorp may have limited recourse for IP breach.
+    affectedParty: TechCorp Inc
+    clauseRef: "5"
+    confidence: 0.88
+
+  - id: risk-2
+    description: No express warranty clause for deliverable quality.
+    severity: medium
+    category: legal
+    impact: TechCorp may lack recourse for buggy deliverables.
+    affectedParty: TechCorp Inc
+    confidence: 0.80
+
+definitions:
+  - term: Confidential Information
+    definition: Non-public information disclosed by one party to the other.
+    clauseRef: "4"
+  - term: Work Product
+    definition: All deliverables, software code, designs, and documentation created by DevStudio.
+    clauseRef: "1"
+
+metadata:
+  extractedAt: "2026-05-25T16:00:00Z"
+  extractedBy: Docfide Engine
+  extractionEngine:
+    name: docfide-extract
+    version: "0.4.2"
+  confidence: 0.91
+  sourceDocument:
+    filename: TechCorp_DevStudio_Service_Agreement.pdf
+    mediaType: application/pdf
+    size: 314572
+    pages: 12
+  tags:
+    - service-agreement
+    - software-development
+    - fixed-price
