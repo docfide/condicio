@@ -71,7 +71,12 @@ jobs:
         run: |
           TAG="${GITHUB_REF#refs/tags/}"
           VERSION="${TAG#v}"
-          python/python/verify_version.py "$VERSION"
+          FILE_VERSION=$(grep -oP '(?<=^version = ")[^"]+' python/pyproject.toml)
+          if [ "$VERSION" != "$FILE_VERSION" ]; then
+            echo "Version mismatch: tag=$VERSION, pyproject.toml=$FILE_VERSION"
+            exit 1
+          fi
+          echo "Version verified: $VERSION"
 
       - name: Build package
         run: python -m build
