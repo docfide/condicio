@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><path d='M148,48A70,70 0 1 0 148,152' stroke='%230f6e56' stroke-width='14' fill='none' stroke-linecap='round'/><line x1='148' y1='48' x2='177' y2='48' stroke='%230f6e56' stroke-width='14' stroke-linecap='round'/><line x1='148' y1='152' x2='177' y2='152' stroke='%230f6e56' stroke-width='14' stroke-linecap='round'/></svg>">
-  <script src="https://cdn.jsdelivr.net/npm/ajv@8/dist/ajv.min.js" onerror="document.getElementById('schema-tree') && null; document.getElementById('results').innerHTML='<div class=result-fail><h4>Failed to load AJV</h4><ul><li>Could not load the AJV validation library from CDN. Check your internet connection or try again later.</li></ul></div>'"></script>
+
 </head>
 <body>
 
@@ -118,8 +118,9 @@
     </div>
   </footer>
 
-  <script>
-  // Inline format validators (replaces ajv-formats for browser use)
+  <script type="module">
+  import Ajv from 'https://cdn.jsdelivr.net/npm/ajv@8/+esm';
+
   const FORMATS = {
     'date': function(s) { return /^\d{4}-\d{2}-\d{2}$/.test(s) && !isNaN(Date.parse(s)); },
     'date-time': function(s) { return !isNaN(Date.parse(s)) && s.includes('T'); },
@@ -146,7 +147,6 @@
       const schema = await res.json();
 
       const ajv = new Ajv({ allErrors: true, verbose: true });
-      // Register inline format validators
       for (const [name, fn] of Object.entries(FORMATS)) {
         ajv.addFormat(name, fn);
       }
