@@ -18,7 +18,8 @@
   ],
   "scripts": {
     "test": "node scripts/validate.js",
-    "validate:all": "node scripts/validate.js"
+    "validate:all": "node scripts/validate.js",
+    "docs": "node scripts/generate-docs.js"
   },
   "devDependencies": {
     "ajv": "^8.20.0",
