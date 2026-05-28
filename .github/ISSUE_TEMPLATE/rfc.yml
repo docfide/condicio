@@ -1,0 +1,43 @@
+name: Schema Extension RFC
+description: Propose a change or addition to the Condicio schema
+title: "RFC: "
+labels: ["rfc"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for proposing a schema extension. Please complete the sections below.
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: What problem does this solve? What real-world use case requires this change?
+    validations:
+      required: true
+
+  - type: textarea
+    id: schema-diff
+    attributes:
+      label: Schema changes
+      description: The proposed additions or modifications to condicio.schema.json
+      render: json
+    validations:
+      required: true
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Example document
+      description: A complete example (or excerpt) showing the new fields in use
+      render: json
+    validations:
+      required: true
+
+  - type: textarea
+    id: backward-compat
+    attributes:
+      label: Backward compatibility
+      description: Does this break existing valid documents? If so, how?
+    validations:
+      required: true

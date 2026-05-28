@@ -185,16 +185,6 @@ No existing standard addresses the **output of contract intelligence extraction*
 
 ---
 
-## Roadmap
-
-- **v0.2.0** — Add SaaS/subscription contract fields, multi-currency financials
-- **v0.3.0** — Add clause classification taxonomy reference, compliance mapping
-- **v0.4.0** — Add attachments/schedules support, document redline tracking
-- **v0.5.0** — Governance model, formal RFC process for extensions
-- **v1.0.0** — Stable release, open standards body submission
-
----
-
 ## Contributing
 
 Contributions are welcome and encouraged.

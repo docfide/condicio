@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Governance
+    url: https://github.com/docfide/condicio/blob/main/docs/governance.md
+    about: Schema extension RFC process
+  - name: Usage Guide
+    url: https://github.com/docfide/condicio/blob/main/docs/usage.md
+    about: How to produce and consume Condicio data
