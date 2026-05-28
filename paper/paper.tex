@@ -1,0 +1,348 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% --- Listing style for JSON ---
+\lstdefinelanguage{json}{
+  basicstyle=\ttfamily\small,
+  numbers=none,
+  frame=single,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+  showstringspaces=false,
+  keywordstyle=\color{blue},
+  stringstyle=\color{teal},
+}
+
+% --- Metadata ---
+\title{\textbf{Condicio: An Open JSON Schema Standard for Structured Contract Intelligence and Interoperability}}
+
+\author{
+  Joe~Doe \and Owen~Smith \\
+  \textit{Docfide Research Team} \\
+  \texttt{\{joe,owen\}@docfide.com}
+}
+
+\date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Contracts are the backbone of global commerce, yet the data within them remains trapped in proprietary formats. Every contract lifecycle management (CLM) platform, artificial intelligence extraction engine, and obligation tracking tool produces structured output---but each uses a custom schema, making data exchange costly, error-prone, and sometimes impossible. This paper presents Condicio, an open JSON Schema 2020-12 standard for representing structured contract intelligence data. We survey the landscape of existing legal data standards---LEDES, LegalXML, the Accord Project, SALI, OCDS, and others---and demonstrate that none address the specific problem of contract intelligence extraction output. We then present Condicio's architecture: a composable, confidence-aware schema covering parties, clauses, obligations, financial terms, risks, dates, definitions, and extraction metadata, all validated against a single JSON Schema 2020-12 document. We describe the design principles that guided the schema---extraction-first orientation, provenance tracking, language independence, and extensibility without fragmentation---and present examples across four contract types. Finally, we discuss governance models for the standard's evolution and the path toward industry adoption.
+\end{abstract}
+
+\section{Introduction}
+
+Contracts govern trillions of dollars in economic activity. Employment agreements, software licenses, non-disclosure agreements, service contracts, and countless other instruments define the rights, obligations, and risks that underpin modern commerce. For decades, these documents existed only as printed pages or PDF files---human-readable but machine-opaque.
+
+The last decade has witnessed a dramatic transformation. Contract lifecycle management (CLM) platforms, artificial intelligence (AI) extraction engines, and obligation tracking tools now process contracts at industrial scale, extracting structured data from unstructured legal text. The global CLM market reached \$3.2 billion in 2025 \cite{clm-market-2025}, and AI-powered extraction has become a standard capability rather than a differentiator.
+
+Yet beneath this progress lies a fundamental problem: there is no agreed-upon standard for what structured contract data should look like.
+
+Every platform invents its own output format. Field names differ between systems: a counterparty in one tool becomes a party in another, an obligation deadline in one becomes a due date in the next, and a liability cap in one is stored as text while another represents it as a typed currency value. This fragmentation imposes real costs. Organizations migrating between CLM platforms routinely spend hundreds of thousands of dollars on data transformation, and some vendors charge tens of thousands for data export alone \cite{clio-lock-in}. The European Union's Data Act \cite{eu-data-act}, effective September 2025, mandates data portability for software-as-a-service platforms, yet provides no technical standard for achieving it.
+
+This paper introduces Condicio, an open JSON Schema 2020-12 standard designed to fill this gap. Condicio defines a canonical representation for contract intelligence extraction output: the structured data that results when an AI engine analyzes a contract. It covers parties with roles, classified clauses, typed obligations with deadlines and statuses, financial terms and payment schedules, risk flags with severity and impact, key dates with semantic meaning, defined terms, and extraction provenance metadata.
+
+The contributions of this paper are threefold. First, we provide a systematic analysis of existing legal data standards and identify the gap they leave unaddressed. Second, we present Condicio's architecture and design rationale. Third, we offer a comparison framework for evaluating contract intelligence schemas and a roadmap toward industry adoption.
+
+\section{Background and Related Work}
+
+The legal technology ecosystem has produced multiple data standards over the past three decades, each addressing a distinct domain within the broader legal landscape.
+
+\subsection{Existing Legal Data Standards}
+
+\textbf{LEDES} (Legal Electronic Data Exchange Standard), maintained by the LEDES Oversight Committee, governs the exchange of legal billing and invoicing data between law firms and corporate clients \cite{ledes}. Its formats---LEDES 98B, 98BI, and XML eBilling---cover invoice line items, timekeeper rates, fee entries, and matter identifiers. LEDES has been successful within its scope, demonstrating that industry-wide data standards are achievable in legal technology. However, its domain is purely financial and administrative: it models invoices, not contracts. It has no representation for contractual clauses, obligations, parties as counterparties, or risk allocation.
+
+\textbf{LegalXML}, an OASIS standard, addresses electronic court filing and legislative document markup \cite{legalxml}. The Electronic Court Filing (ECF) specification models the procedural envelope of litigation---who filed what, with which court, and when. LegalDocML (based on Akoma Ntoso) provides an XML vocabulary for parliamentary and judicial documents. These standards are designed for the administration of justice, not for commercial contract analysis. They model document hierarchy without providing data structures for extracted contractual terms.
+
+\textbf{The Accord Project}, hosted under the Linux Foundation, provides a framework for machine-readable and machine-executable legal contracts \cite{accord}. Its three components---Cicero (template specification), Ergo (domain-specific logic language), and Concerto (data modeling)---enable the drafting and execution of smart legal contracts. This is a fundamentally different problem from contract intelligence extraction. The Accord Project assumes contracts are authored from scratch using its template system; Condicio addresses the inverse problem: given an unstructured legacy contract, produce structured output describing what it contains.
+
+\textbf{SALI} (Standards Advancement for the Legal Industry) maintains the Legal Matter Specification Standard (LMSS), an OWL ontology of over 18,000 tags for describing legal matters \cite{sali}. Its taxonomy covers areas of law, legal services, document types, clause types, and player roles. SALI has achieved notable adoption, with endorsements from Thomson Reuters, Microsoft, and the Corporate Legal Operations Consortium (CLOC). Critically, however, SALI is a classification taxonomy, not a data schema. It answers the question ``what type of clause is this?'' but not ``what are the structured values within this clause?'' An indemnification clause tagged with SALI's code for ``Indemnification Clause'' still requires a separate schema to represent the indemnitor, indemnitee, cap amount, triggering events, and exceptions. SALI provides the nouns; Condicio provides the data model.
+
+\textbf{OCDS} (Open Contracting Data Standard), maintained by the Open Contracting Partnership, uses JSON Schema to model the public procurement lifecycle---planning, tender, award, contract, and implementation \cite{ocds}. It has been adopted by over 50 governments and endorsed by the G20 and G7. OCDS is the closest existing analogue to Condicio in its use of JSON Schema and its extension model, but its domain is procurement process transparency, not contract content intelligence. Its \texttt{contract} object captures administrative metadata (value, period, document reference) but has no fields for extracted clauses, obligations, indemnities, or risk assessments.
+
+\textbf{Additional standards}. The Open Data Contract Standard (ODCS, Bitol) addresses data engineering governance---dataset ownership, quality SLAs, infrastructure---rather than legal contract content \cite{odcs}. International Chamber of Commerce (ICC) model contracts provide legal drafting templates for cross-border transactions but are published as Word and PDF documents without machine-readable data models \cite{icc-models}. The UTBMS (Uniform Task-Based Management System) provides codes for legal task categorization but, like LEDES, is billing-oriented.
+
+\subsection{The Contract AI Extraction Landscape}
+
+The CLM market has consolidated around a set of leading platforms---Ironclad, Icertis, Evisort (acquired by Workday), Sirion, LinkSquares, ContractPodAi, and DocuSign CLM (incorporating Seal Software)---alongside specialized extraction tools such as Kira Systems (acquired by Litera), Luminance, and ThoughtTrace \cite{clm-vendors}. All offer AI-powered extraction of contract metadata, but each uses a proprietary, tenant-configurable schema for the extracted output.
+
+A systematic review of API documentation for these platforms reveals a consistent pattern: extraction schemas are user-defined within each system. Ironclad's API returns contract data with custom property identifiers per workflow \cite{ironclad-api}. Icertis employs tenant-configured masterdata tables \cite{icertis-api}. Evisort's ``Smart Fields'' are user-created custom provisions \cite{evisort-api}. Sirion provides over 1,200 out-of-box fields but allows tenant modifications \cite{sirion-api}. LinkSquares combines standardized types with custom ``Smart Values'' \cite{linksquares-api}.
+
+The consequence is that contract metadata cannot be ported between platforms without custom transformation. A migration from Ironclad to Sirion requires mapping \texttt{counterpartyName} to the equivalent Sirion field---if one exists with the same semantics. If it does not, the data must be re-extracted from source documents.
+
+This lack of standardization persists despite significant advances in the underlying AI technology. Large language models (LLMs) have transformed contract extraction capabilities since 2023, with zero-shot extraction now achieving competitive accuracy on standard clauses \cite{olava-extract}. JSON Schema has become the de facto standard for constraining LLM outputs, supported natively by OpenAI, Anthropic, Google Gemini, and others \cite{sourcemeta-json-schema}. This development makes an open JSON Schema for contracts particularly timely: Condicio can serve simultaneously as a standard for tool output and as the schema for LLM-constrained generation.
+
+\subsection{The Economic Cost of Fragmentation}
+
+The absence of a standard interchange format for contract data carries quantifiable costs. Industry analyses report that poor contract management costs organizations an average of 9\% of annual revenue \cite{worldcc}. Data migration between CLM platforms routinely requires custom engineering: one documented migration of 33,000 contracts required a custom Python pipeline \cite{aavenir-migration}, and a Fortune 500 company spent \$300,000 on data migration alone \cite{ironclad-cost}.
+
+The EU Data Act, effective September 2025, requires data processing services---including CLM platforms---to remove barriers to switching, complete data portability within 30 days, and eliminate exit fees by January 2027 \cite{eu-data-act}. These regulatory mandates create both pressure and opportunity. Without a technical standard for contract data interchange, compliance will require ad hoc solutions. Condicio provides a standard that platforms can implement to satisfy both the letter and the spirit of the regulation.
+
+\section{The Missing Layer: Contract Intelligence Extraction Output}
+
+The survey above reveals a clear pattern. Each existing standard addresses an adjacent but distinct problem:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{LEDES}: invoicing data after contract performance
+  \item \textbf{LegalXML}: court filing procedure
+  \item \textbf{Accord Project}: authoring and executing new smart contracts
+  \item \textbf{SALI}: classification tags for legal matters
+  \item \textbf{OCDS}: public procurement process transparency
+  \item \textbf{ODCS}: data engineering governance
+  \item \textbf{ICC/ITC models}: legal drafting templates
+\end{itemize}
+
+None of these standards defines what we call \emph{contract intelligence extraction output}: the structured data that an AI system produces when it analyzes a contract's text. This output includes:
+
+\begin{itemize}[noitemsep]
+  \item Parties with roles (employer/employee, licensor/licensee, disclosing party/receiving party)
+  \item Clauses with classification, full text, and explicit confidence scores
+  \item Obligations with responsible parties, beneficiaries, deadline types, and statuses
+  \item Financial terms with amounts, currencies, periods, conditions, and payment schedules
+  \item Risk flags with severity levels, categories, impact descriptions, and affected parties
+  \item Key dates with semantic labels (execution, effective, expiry, renewal window, notice deadline)
+  \item Defined terms with their definitions and source clause references
+  \item Extraction provenance: which engine produced the output, when, and with what confidence
+\end{itemize}
+
+This is the gap Condicio fills.
+
+\section{The Condicio Schema}
+
+Condicio is defined as a single JSON Schema 2020-12 document at the canonical URI \url{https://raw.githubusercontent.com/docfide/condicio/main/schema/condicio.schema.json}. The choice of JSON Schema 2020-12 over earlier drafts was motivated by three factors: its support for \texttt{\$defs}-based composition, the clear separation of \texttt{prefixItems} from \texttt{items} for tuple validation, and its status as the version adopted by OpenAPI 3.1, aligning Condicio with the broader API ecosystem \cite{json-schema-2020-12}.
+
+\subsection{Architecture}
+
+The schema defines nine top-level sections:
+
+\begin{table}[h]
+\centering
+\caption{Condicio top-level schema sections}
+\label{tab:sections}
+\begin{tabular}{p{3cm}p{2cm}p{8cm}}
+\toprule
+\textbf{Section} & \textbf{Type} & \textbf{Description} \\
+\midrule
+\texttt{contract} & object & Document-level metadata: title, type, jurisdiction, governing law, status, identifiers \\
+\texttt{parties} & array & Named parties with roles, legal type, jurisdiction, contact information \\
+\texttt{dates} & array & Key dates with semantic labels and descriptions \\
+\texttt{clauses} & array & Extracted clauses with classification, text, and confidence \\
+\texttt{obligations} & array & Actionable items with deadlines, responsible parties, status, and clause references \\
+\texttt{financials} & object & Monetary terms: total value, currency, payment schedule, terms \\
+\texttt{risks} & array & Risk assessments with severity, category, impact, and affected party \\
+\texttt{definitions} & array & Defined terms and their definitions \\
+\texttt{metadata} & object & Extraction provenance, confidence, source document, timestamps \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Composable reusable types are defined under \texttt{\$defs} and referenced via \texttt{\$ref}. This includes \texttt{party}, \texttt{clause}, \texttt{obligation}, \texttt{financialTerm}, \texttt{payment}, \texttt{risk}, \texttt{contractDate}, \texttt{contactInfo}, and \texttt{address}. Each type includes a \texttt{description} annotation for documentation generation.
+
+\subsection{Confidence-Aware Design}
+
+A distinguishing feature of Condicio is its treatment of extraction confidence. Any field whose value is produced by an AI extraction engine can carry an optional \texttt{confidence} annotation ranging from 0.0 (no confidence) to 1.0 (certain). This is particularly important for clause extraction, obligation identification, and risk assessment, where the same extraction engine may produce results of varying reliability across different document types.
+
+The confidence score enables downstream consumers to implement threshold-based filtering: a risk management dashboard might only display risks with confidence above 0.8, while an obligation tracker might flag low-confidence obligations for manual review.
+
+\subsection{Extensibility}
+
+Condicio uses a top-level \texttt{metadata.custom} field as a designated extension point for tool-specific or organization-specific data. This prevents the fragmentation that occurs when vendors add custom top-level fields. The field is typed as \texttt{object} without further constraint, allowing any structured data while maintaining the integrity of the core schema.
+
+The extension model is intentionally additive. Following the pattern established by OCDS \cite{ocds-extensions}, future extensions to Condicio should add optional fields rather than modify or remove existing ones. A formal extension registry and governance process are defined in the project's governance RFC \cite{condicio-governance}.
+
+\subsection{Example}
+
+Figure~\ref{fig:example} shows a minimal valid Condicio document for an NDA:
+
+\begin{lstlisting}[language=json, caption=A minimal Condicio NDA document, label=fig:example, basicstyle=\ttfamily\scriptsize]
+{
+  "condicio": "https://raw.githubusercontent.com/docfide/condicio/main/schema/condicio.schema.json",
+  "specVersion": "0.1.0",
+  "id": "urn:uuid:3a7b2f91-8c4d-4e1a-9f6b-2d5c7a3e8f1b",
+  "contract": {
+    "title": "Mutual Non-Disclosure Agreement",
+    "type": "NDA",
+    "status": "executed",
+    "jurisdiction": "Delaware"
+  },
+  "parties": [
+    { "name": "Acme Corporation", "role": "disclosing party" },
+    { "name": "Beta Inc", "role": "receiving party" }
+  ],
+  "obligations": [{
+    "description": "Maintain Confidential Information in strict confidence.",
+    "obligor": "Beta Inc",
+    "deadlineType": "ongoing",
+    "status": "pending",
+    "confidence": 0.97
+  }]
+}
+\end{lstlisting}
+
+Complete examples for NDA, service agreement, employment agreement, and software license agreement are available in both JSON and YAML formats in the project repository.
+
+\section{Design Principles}
+
+Condicio's design is guided by six principles:
+
+\textbf{Extraction-first orientation.} The schema is designed for the output of contract intelligence extraction, not for contract drafting or execution. This distinguishes it from the Accord Project and ICC model contracts. A Condicio document describes what an AI extracted from a source contract; it does not prescribe how a contract should be written.
+
+\textbf{Provenance and confidence.} Every extracted value can be traced to its source. The \texttt{metadata} section records the extraction engine, timestamp, and source document. Individual fields carry confidence scores. This is essential for AI-generated data, where consumers need to assess trustworthiness at the field level---a concept absent from legal standards designed for human-curated data.
+
+\textbf{Composability.} Types are defined as reusable \texttt{\$defs} rather than monolithic blocks. An obligation references its source clause via \texttt{clauseRef}. Financial terms can stand alone or be grouped into a payment schedule. This enables selective adoption: a tool that only needs party extraction can produce a valid Condicio document with just the \texttt{contract} and \texttt{parties} sections.
+
+\textbf{Language and format independence.} Core fields are language-agnostic. The schema identifies the contract's language via BCP 47 codes but does not assume English. All examples are provided in both JSON and YAML, reflecting the dual-format convention adopted by many modern API ecosystems.
+
+\textbf{Strictness with extensibility.} The root of the schema uses \texttt{additionalProperties: false} to enforce strict compliance, preventing accidental or ad hoc extensions that would undermine interoperability. Extensions are channeled through the designated \texttt{metadata.custom} field, maintaining schema integrity while accommodating organization-specific needs.
+
+\textbf{Standards alignment.} Where possible, Condicio adopts existing conventions rather than inventing new ones. Dates use ISO 8601, currencies use ISO 4217, languages use BCP 47, and the schema itself conforms to JSON Schema 2020-12. This reduces the learning curve for adopters and enables reuse of existing validation tooling.
+
+\section{Comparative Analysis}
+
+Table~\ref{tab:comparison} compares Condicio against existing standards across dimensions relevant to contract intelligence extraction.
+
+\begin{table}[h]
+\centering
+\caption{Comparative analysis of contract and legal data standards}
+\label{tab:comparison}
+\small
+\begin{tabular}{p{2.2cm}p{1.5cm}p{1.5cm}p{1.5cm}p{1.8cm}}
+\toprule
+\textbf{Standard} & \textbf{Extraction schema} & \textbf{Confidence scores} & \textbf{Obligation model} & \textbf{Extension mechanism} \\
+\midrule
+LEDES & No & No & No & No \\
+LegalXML & No & No & No & No \\
+Accord Project & No & No & Execution & Concerto models \\
+SALI & Classification & No & No & OWL extension \\
+OCDS & Process only & No & No & JSON Merge Patch \\
+\textbf{Condicio} & \textbf{Full} & \textbf{Per-field} & \textbf{Full lifecycle} & \textbf{Designated + registry} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Condicio is the only standard that provides a complete extraction schema with per-field confidence, a structured obligation model covering the full lifecycle (pending, fulfilled, overdue, waived, breached), and a designated extension mechanism. SALI provides clause classification (the ``what'') but not the structured values (the ``how much,'' ``who,'' ``by when''). OCDS provides a JSON Schema foundation but is scoped to procurement process data. The Accord Project provides an obligation model but in the context of execution, not extraction.
+
+\section{Use Cases and Adoption Pathways}
+
+Condicio is designed for three primary use cases:
+
+\textbf{Standardized extraction output.} AI contract extraction engines currently define their own output schemas. Adopting Condicio as a canonical output format enables any engine to produce data that any compliant consumer can process. This decouples extraction from downstream applications.
+
+\textbf{CLM data portability.} Organizations migrating between CLM platforms can use Condicio as an intermediate format. Data exported from one platform in Condicio format can be imported into another without custom field mapping, provided both platforms support the standard. This directly addresses the migration costs documented in Section~\ref{sec:fragmentation}.
+
+\textbf{Portfolio analytics.} Organizations with contracts across multiple legal entities, jurisdictions, or systems can aggregate contract data into a unified Condicio corpus, enabling cross-portfolio risk analysis, obligation tracking, and financial reporting.
+
+Adoption pathways include integration with existing CLM platforms via API adapters, incorporation into AI extraction engine outputs, and use as a validation standard for data quality assurance.
+
+\section{Governance and Evolution}
+
+Condicio is released under the Apache License 2.0. The project's governance is defined by a formal RFC (Request for Comments) process documented in the repository \cite{condicio-governance}. Schema changes follow a lifecycle of Proposal, Discussion, Refinement, Review, and Acceptance or Rejection. The project uses semantic versioning: MAJOR changes for breaking modifications, MINOR changes for backward-compatible additions, and PATCH changes for fixes and clarifications.
+
+The schema extension mechanism follows the additive-only pattern established by OCDS \cite{ocds-extensions}: extensions may add new optional fields but must not modify or remove existing ones. This ensures backward compatibility across MINOR and PATCH releases.
+
+During the pre-1.0 phase, the Docfide team acts as the sole maintainer, with a planned transition to a multi-stakeholder technical steering committee as the community grows. The long-term governance model envisions hosting under a neutral foundation, following the pattern established by the Accord Project under the Linux Foundation.
+
+\section{Conclusion}
+
+We have presented Condicio, an open JSON Schema 2020-12 standard for contract intelligence extraction output. Through a systematic survey of existing standards, we identified a gap that none of them fill: a standardized, confidence-aware representation of the structured data that AI systems extract from contracts. We described Condicio's architecture, design principles, and extension model, and provided examples across four contract types.
+
+The need for such a standard is acute. The CLM market has grown to \$3.2 billion, but the data produced by its tools remains locked in proprietary formats. Regulatory mandates for data portability are creating legal pressure for interoperability. AI advances are making extraction cheaper and more accurate, increasing the volume of structured contract data that needs a standard home.
+
+Condicio alone cannot solve these problems. Standards succeed through adoption, not design. We offer Condicio as a foundation and invite the community---CLM vendors, AI extraction developers, legal operations teams, and contract analysts---to build upon it.
+
+\section*{Acknowledgments}
+
+We thank the open-source community and the developers of the standards surveyed in this paper for their foundational work. The Condicio project builds on their contributions. We are particularly indebted to the Open Contracting Data Standard for demonstrating that open JSON Schema standards can achieve meaningful real-world adoption in the contracting domain.
+
+\begin{thebibliography}{30}
+
+\bibitem{clm-market-2025}
+Business Software. ``2025 AI Contract Management Vendor Showdown.'' \textit{Business Software Blog}, 2025.
+
+\bibitem{clio-lock-in}
+Clio. ``Vendor Lock-In in Legal Software: UK Report.'' \textit{Clio}, 2025.
+
+\bibitem{eu-data-act}
+European Union. ``Regulation (EU) 2023/2854 on Harmonised Rules on Fair Access to and Use of Data (Data Act).'' \textit{Official Journal of the European Union}, 2023.
+
+\bibitem{ledes}
+LEDES Oversight Committee. ``LEDES Standards.'' \textit{ledes.org}, 2025.
+
+\bibitem{legalxml}
+OASIS LegalXML Member Section. ``LegalXML Electronic Court Filing v5.01.'' \textit{oasis-open.org}, 2023.
+
+\bibitem{accord}
+Accord Project. ``Accord Project Template Specification.'' \textit{accordproject.org}, 2025.
+
+\bibitem{sali}
+SALI Alliance. ``Legal Matter Specification Standard (LMSS).'' \textit{sali.org}, 2025.
+
+\bibitem{ocds}
+Open Contracting Partnership. ``Open Contracting Data Standard v1.1.'' \textit{standard.open-contracting.org}, 2025.
+
+\bibitem{odcs}
+Bitol / LF AI \& Data Foundation. ``Open Data Contract Standard (ODCS).'' \textit{bitol.io}, 2025.
+
+\bibitem{icc-models}
+International Chamber of Commerce. ``ICC Model Contracts.'' \textit{iccwbo.org}, 2025.
+
+\bibitem{clm-vendors}
+Viewpoint Analysis. ``Contract Management Software Buyer's Guide 2026.'' \textit{viewpointanalysis.com}, 2026.
+
+\bibitem{ironclad-api}
+Ironclad. ``Developer Hub: API Reference.'' \textit{developer.ironcladapp.com}, 2026.
+
+\bibitem{icertis-api}
+Icertis. ``ICI API Wiki.'' \textit{iciwikiapac.icertis.com}, 2026.
+
+\bibitem{evisort-api}
+Evisort (Workday). ``Documents API Reference.'' \textit{documents.developers.evisort.com}, 2026.
+
+\bibitem{sirion-api}
+Sirion. ``Sirion API Documentation.'' \textit{sirion.ai}, 2026.
+
+\bibitem{linksquares-api}
+LinkSquares. ``API Guide.'' \textit{help.linksquares.com}, 2026.
+
+\bibitem{olava-extract}
+Olava Research. ``Efficient Domain-Adapted SLM for Contract Extraction.'' \textit{arXiv:2605.05532}, 2026.
+
+\bibitem{sourcemeta-json-schema}
+Sourcemeta. ``AI Only Speaks JSON Schema.'' \textit{sourcemeta.com}, 2026.
+
+\bibitem{worldcc}
+World Commerce \& Contracting. ``Cost of Poor Contract Management.'' \textit{worldcc.com}, 2024.
+
+\bibitem{aavenir-migration}
+Aavenir. ``How Aavenir Migrated 33,000 Contract Documents.'' \textit{aavenir.com}, 2025.
+
+\bibitem{ironclad-cost}
+Ironclad. ``CLM Cost Breakdown: Understanding Total Cost of Ownership.'' \textit{ironcladapp.com}, 2025.
+
+\bibitem{json-schema-2020-12}
+JSON Schema. ``JSON Schema 2020-12 Specification.'' \textit{json-schema.org}, 2020.
+
+\bibitem{ocds-extensions}
+Open Contracting Partnership. ``OCDS Conformance and Extensions.'' \textit{standard.open-contracting.org}, 2025.
+
+\bibitem{condicio-governance}
+Docfide. ``Condicio Governance: Schema Extension RFC Process.'' \textit{github.com/docfide/condicio}, 2026.
+
+\end{thebibliography}
+
+\end{document}
