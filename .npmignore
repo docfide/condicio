@@ -1,0 +1,6 @@
+.github/
+scripts/
+node_modules/
+docs/
+.gitignore
+.DS_Store

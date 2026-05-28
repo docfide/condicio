@@ -3,11 +3,21 @@
   "version": "0.1.0",
   "description": "Open schema for structured contract intelligence data: parties, clauses, obligations, risks, dates, financial terms, and more.",
   "main": "schema/condicio.schema.json",
+  "files": [
+    "schema/condicio.schema.json",
+    "schema/examples/",
+    "README.md",
+    "LICENSE"
+  ],
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/docfide/condicio"
   },
+  "bugs": {
+    "url": "https://github.com/docfide/condicio/issues"
+  },
+  "homepage": "https://github.com/docfide/condicio#readme",
   "keywords": [
     "contract",
     "schema",
@@ -19,7 +29,9 @@
   "scripts": {
     "test": "node scripts/validate.js",
     "validate:all": "node scripts/validate.js",
-    "docs": "node scripts/generate-docs.js"
+    "docs": "node scripts/generate-docs.js",
+    "prepublishOnly": "npm test",
+    "prepack": "npm test"
   },
   "devDependencies": {
     "ajv": "^8.20.0",
