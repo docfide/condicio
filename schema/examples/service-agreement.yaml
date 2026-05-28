@@ -1,4 +1,4 @@
-condicio: https://condicio.dev/schema/condicio.schema.json
+condicio: https://raw.githubusercontent.com/docfide/condicio/main/schema/condicio.schema.json
 specVersion: "0.1.0"
 id: "urn:uuid:7e2f4a8b-1c3d-4e5f-9a0b-6c7d8e9f1a2b"
 contract:

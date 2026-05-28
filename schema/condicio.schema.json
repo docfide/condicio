@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://condicio.dev/schema/condicio.schema.json",
+  "$id": "https://raw.githubusercontent.com/docfide/condicio/main/schema/condicio.schema.json",
   "title": "Condicio Schema",
   "description": "Open schema for structured contract intelligence data: parties, clauses, obligations, risks, dates, financial terms, and more.",
   "type": "object",
@@ -13,7 +13,7 @@
   "properties": {
     "condicio": {
       "description": "Immutable identifier for the Condicio schema version.",
-      "const": "https://condicio.dev/schema/condicio.schema.json"
+      "const": "https://raw.githubusercontent.com/docfide/condicio/main/schema/condicio.schema.json"
     },
     "specVersion": {
       "description": "Version of the Condicio specification this document conforms to.",

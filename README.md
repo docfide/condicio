@@ -14,7 +14,7 @@ Condicio (Latin: *agreement, condition, stipulation*) defines a **universal sche
 
 ```json
 {
-  "condicio": "https://condicio.dev/schema/condicio.schema.json",
+  "condicio": "https://raw.githubusercontent.com/docfide/condicio/main/schema/condicio.schema.json",
   "contract": {
     "title": "Mutual Non-Disclosure Agreement",
     "type": "NDA",

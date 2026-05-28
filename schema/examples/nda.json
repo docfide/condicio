@@ -1,5 +1,5 @@
 {
-  "condicio": "https://condicio.dev/schema/condicio.schema.json",
+  "condicio": "https://raw.githubusercontent.com/docfide/condicio/main/schema/condicio.schema.json",
   "specVersion": "0.1.0",
   "id": "urn:uuid:3a7b2f91-8c4d-4e1a-9f6b-2d5c7a3e8f1b",
   "contract": {
