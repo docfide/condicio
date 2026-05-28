@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usage Guide — Condicio</title>
+  <meta name="description" content="How to produce and consume Condicio contract intelligence data — minimum viable document, parties, obligations, financials, risks, and validation.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><path d='M148,48A70,70 0 1 0 148,152' stroke='%230f6e56' stroke-width='14' fill='none' stroke-linecap='round'/><line x1='148' y1='48' x2='177' y2='48' stroke='%230f6e56' stroke-width='14' stroke-linecap='round'/><line x1='148' y1='152' x2='177' y2='152' stroke='%230f6e56' stroke-width='14' stroke-linecap='round'/></svg>">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/condicio/" class="nav-brand">
+        <svg class="nav-logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <path d="M148,48A70,70 0 1 0 148,152" stroke="#0f6e56" stroke-width="14" fill="none" stroke-linecap="round"/>
+          <line x1="148" y1="48" x2="177" y2="48" stroke="#0f6e56" stroke-width="14" stroke-linecap="round"/>
+          <line x1="148" y1="152" x2="177" y2="152" stroke="#0f6e56" stroke-width="14" stroke-linecap="round"/>
+          <circle cx="173" cy="100" r="5" fill="#0f6e56"/>
+        </svg>
+        Condicio
+      </a>
+      <ul class="nav-links">
+        <li><a href="schema/">Schema</a></li>
+        <li><a href="validator/">Validator</a></li>
+        <li><a href="usage.html" class="active">Usage</a></li>
+        <li><a href="https://github.com/docfide/condicio">GitHub</a></li>
+        <li><a href="https://www.npmjs.com/package/condicio-schema"><span class="badge badge-npm">npm</span></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>Usage Guide</h1>
+      <p>How to produce and consume Condicio contract data.</p>
+    </div>
+  </div>
+
+  <div class="section" style="padding-top:0;">
+    <div class="container docs-content">
+
+      <h2>Producing Condicio data</h2>
+      <p>If you're building a contract extraction tool, CLM integration, or AI pipeline, Condicio defines what your output should look like.</p>
+
+      <h3>Minimum viable document</h3>
+      <p>Only the <code>condicio</code> identifier, <code>specVersion</code>, and <code>contract.title</code> are required:</p>
+      <pre class="code-block">{
+  "condicio": "https://raw.githubusercontent.com/docfide/condicio/main/schema/condicio.schema.json",
+  "specVersion": "0.1.0",
+  "id": "urn:uuid:a1b2c3d4-...",
+  "contract": {
+    "title": "My Contract"
+  }
+}</pre>
+
+      <h3>Adding parties</h3>
+      <pre class="code-block">{
+  "parties": [
+    {
+      "id": "party-abc",
+      "name": "ABC Corp",
+      "role": "client",
+      "type": "corporation"
+    }
+  ]
+}</pre>
+
+      <h3>Adding obligations</h3>
+      <p>Each obligation links back to its source clause:</p>
+      <pre class="code-block">{
+  "obligations": [
+    {
+      "description": "Deliver source code by March 1st.",
+      "obligor": "DevStudio LLC",
+      "deadlineType": "fixed date",
+      "fixedDate": "2026-03-01",
+      "status": "pending",
+      "clauseRef": "3"
+    }
+  ]
+}</pre>
+      <p><strong>Deadline types:</strong></p>
+      <ul>
+        <li><strong><code>fixed date</code></strong> — use with <code>fixedDate</code></li>
+        <li><strong><code>days from event</code></strong> — use with <code>daysFromEvent</code></li>
+        <li><strong><code>recurring</code></strong> — ongoing periodic obligation</li>
+        <li><strong><code>conditional</code></strong> — triggered by a future event</li>
+        <li><strong><code>ongoing</code></strong> — continuous, no fixed endpoint</li>
+      </ul>
+
+      <h3>Adding financials</h3>
+      <pre class="code-block">{
+  "financials": {
+    "currency": "USD",
+    "totalContractValue": 150000,
+    "terms": [
+      { "label": "license fee", "amount": 150000, "period": "one-time" }
+    ],
+    "paymentSchedule": [
+      { "amount": 75000, "dueDate": "2026-01-01", "status": "paid" },
+      { "amount": 75000, "dueDate": "2026-06-01", "status": "pending" }
+    ]
+  }
+}</pre>
+
+      <h3>Adding risks</h3>
+      <pre class="code-block">{
+  "risks": [
+    {
+      "description": "No limitation of liability clause.",
+      "severity": "high",
+      "category": "legal",
+      "impact": "Uncapped liability exposure.",
+      "affectedParty": "ABC Corp",
+      "confidence": 0.92
+    }
+  ]
+}</pre>
+      <p>Severity levels: <code>low</code>, <code>medium</code>, <code>high</code>, <code>critical</code></p>
+
+      <h3>Confidence scores</h3>
+      <p>Any extracted field can carry a <code>confidence</code> between <code>0.0</code> and <code>1.0</code>. This is critical for AI-generated output — consumers can filter by confidence threshold.</p>
+
+      <hr>
+
+      <h2>Consuming Condicio data</h2>
+
+      <h3>Validate with AJV (Node.js)</h3>
+      <pre class="code-block">import Ajv from 'ajv/dist/2020.js'
+import addFormats from 'ajv-formats'
+import condicio from 'condicio-schema'
+
+const ajv = new Ajv()
+addFormats(ajv)
+const validate = ajv.compile(condicio)
+
+if (validate(doc)) {
+  console.log('Valid')
+} else {
+  console.error(validate.errors)
+}</pre>
+
+      <h3>Validate with the CLI</h3>
+      <pre class="code-block">npm install -g ajv-cli
+ajv validate -s node_modules/condicio-schema/schema/condicio.schema.json -d contract.json</pre>
+
+      <h3>Query obligations by party</h3>
+      <pre class="code-block">const myObligations = doc.obligations.filter(o => o.obligor === 'ABC Corp')
+const overdue = doc.obligations.filter(o => o.status === 'overdue')</pre>
+
+      <h3>Filter by risk severity</h3>
+      <pre class="code-block">const critical = doc.risks.filter(r => r.severity === 'critical')</pre>
+
+      <hr>
+
+      <h2>YAML</h2>
+      <p>Condicio supports both JSON and YAML. Valid YAML documents are structurally identical to their JSON equivalents:</p>
+      <pre class="code-block">condicio: https://raw.githubusercontent.com/docfide/condicio/main/schema/condicio.schema.json
+specVersion: "0.1.0"
+contract:
+  title: My Contract
+  type: Service Agreement
+parties:
+  - name: ABC Corp
+    role: client</pre>
+      <p>All examples are available in both formats under <code>schema/examples/</code>.</p>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="footer-brand">Condicio</div>
+        <p>Open standard for contract intelligence data. Released under the Apache 2.0 license.</p>
+        <p style="margin-top:8px;font-size:0.8rem;">A project of <a href="https://tensflare.com" style="color:var(--slate-400);">Tensflare Ltd</a>.</p>
+      </div>
+      <div>
+        <h4>Schema</h4>
+        <ul>
+          <li><a href="schema/">Browse</a></li>
+          <li><a href="validator/">Validator</a></li>
+          <li><a href="field-reference.html">Reference</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Community</h4>
+        <ul>
+          <li><a href="https://github.com/docfide/condicio">GitHub</a></li>
+          <li><a href="governance.html">Governance</a></li>
+          <li><a href="https://github.com/docfide/condicio/blob/main/CONTRIBUTING.md">Contributing</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>About</h4>
+        <ul>
+          <li><a href="https://docfide.com">Docfide</a></li>
+          <li><a href="https://github.com/docfide/condicio/blob/main/LICENSE">License</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

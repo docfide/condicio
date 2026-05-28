@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Governance — Condicio</title>
+  <meta name="description" content="Condicio schema governance process — RFC lifecycle, versioning, scope, and maintainer roles.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><path d='M148,48A70,70 0 1 0 148,152' stroke='%230f6e56' stroke-width='14' fill='none' stroke-linecap='round'/><line x1='148' y1='48' x2='177' y2='48' stroke='%230f6e56' stroke-width='14' stroke-linecap='round'/><line x1='148' y1='152' x2='177' y2='152' stroke='%230f6e56' stroke-width='14' stroke-linecap='round'/></svg>">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/condicio/" class="nav-brand">
+        <svg class="nav-logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <path d="M148,48A70,70 0 1 0 148,152" stroke="#0f6e56" stroke-width="14" fill="none" stroke-linecap="round"/>
+          <line x1="148" y1="48" x2="177" y2="48" stroke="#0f6e56" stroke-width="14" stroke-linecap="round"/>
+          <line x1="148" y1="152" x2="177" y2="152" stroke="#0f6e56" stroke-width="14" stroke-linecap="round"/>
+          <circle cx="173" cy="100" r="5" fill="#0f6e56"/>
+        </svg>
+        Condicio
+      </a>
+      <ul class="nav-links">
+        <li><a href="schema/">Schema</a></li>
+        <li><a href="validator/">Validator</a></li>
+        <li><a href="usage.html">Usage</a></li>
+        <li><a href="https://github.com/docfide/condicio">GitHub</a></li>
+        <li><a href="https://www.npmjs.com/package/condicio-schema"><span class="badge badge-npm">npm</span></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>Governance</h1>
+      <p>Schema Extension RFC Process — how Condicio evolves.</p>
+    </div>
+  </div>
+
+  <div class="section" style="padding-top:0;">
+    <div class="container docs-content">
+
+      <p>All schema changes — new fields, new sections, new <code>$defs</code>, or structural modifications — follow the RFC (Request for Comments) process described here.</p>
+
+      <h2>RFC Lifecycle</h2>
+
+      <pre style="background:var(--slate-50);padding:16px;border-radius:8px;text-align:center;font-size:0.9rem;">Proposal → Discussion → Refinement → Review → Decision → Accepted / Rejected</pre>
+
+      <h3>1. Proposal</h3>
+      <p>Anyone may propose a schema extension by opening a GitHub issue using the <a href="https://github.com/docfide/condicio/issues/new?template=rfc.yml">RFC template</a>. The proposal should include:</p>
+      <ul>
+        <li><strong>Motivation</strong> — what problem does this solve?</li>
+        <li><strong>Use case</strong> — what contracts or workflows need this?</li>
+        <li><strong>Schema diff</strong> — the proposed changes to <code>condicio.schema.json</code></li>
+        <li><strong>Example</strong> — a complete example document showing the new fields in use</li>
+        <li><strong>Backward compatibility</strong> — does this break existing documents?</li>
+      </ul>
+
+      <h3>2. Discussion (minimum 7 days)</h3>
+      <p>The proposal is discussed openly on the issue thread. Participants should focus on:</p>
+      <ul>
+        <li>Does the proposal fit Condicio's scope (contract intelligence extraction)?</li>
+        <li>Is the field broadly useful, or specific to one domain?</li>
+        <li>Is the naming consistent with existing conventions?</li>
+        <li>Could the same goal be achieved with existing fields?</li>
+      </ul>
+
+      <h3>3. Refinement</h3>
+      <p>Based on feedback, the author may revise the proposal. Significant changes should be summarized in a comment on the issue.</p>
+
+      <h3>4. Review</h3>
+      <p>A designated maintainer (or the Docfide team for v0.x) performs final review:</p>
+      <ul>
+        <li>Schema validity is checked (<code>npm test</code>)</li>
+        <li>New examples validate correctly</li>
+        <li>Documentation is updated (field reference, usage guide)</li>
+      </ul>
+
+      <h3>5. Decision</h3>
+      <ul>
+        <li><strong>Accept</strong> — schema is updated, examples are added, changelog is recorded</li>
+        <li><strong>Reject</strong> — issue is closed with explanation</li>
+        <li><strong>Defer</strong> — marked for future major version</li>
+      </ul>
+
+      <h2>Versioning</h2>
+      <p>Condicio follows <strong>Semantic Versioning</strong> for the schema specification:</p>
+      <ul>
+        <li><strong>Major</strong> — breaking changes (removing fields, changing required fields)</li>
+        <li><strong>Minor</strong> — backward-compatible additions (new optional fields, new <code>$defs</code>)</li>
+        <li><strong>Patch</strong> — fixes, clarifications, documentation</li>
+      </ul>
+      <p>Pre-v1.0, minor changes may include breaking changes with notice.</p>
+
+      <h2>Maintainers</h2>
+      <p>During v0.x, the Docfide team acts as the sole maintainer, responsible for:</p>
+      <ul>
+        <li>Merging RFCs that have reached consensus</li>
+        <li>Ensuring backward compatibility where practical</li>
+        <li>Maintaining the validation pipeline and release process</li>
+      </ul>
+      <p>Post-v1.0, maintainer roles will be formally defined with community representation.</p>
+
+      <h2>Scope</h2>
+      <p>Condicio is scoped to <strong>contract intelligence extraction data</strong> — what tools like CLM platforms, AI extraction engines, and obligation trackers <em>output</em> about a contract. The following are explicitly <strong>out of scope</strong>:</p>
+      <ul>
+        <li>Contract drafting or template languages (Accord Project covers this)</li>
+        <li>Smart contract execution logic (Solidity, Rust, etc.)</li>
+        <li>Document storage or management APIs</li>
+        <li>Contract negotiation workflows</li>
+      </ul>
+      <p>Extensions that push beyond this scope should be proposed as companion specifications rather than modifications to the core schema.</p>
+
+      <h2>License</h2>
+      <p>All RFCs and contributed schema changes are licensed under Apache 2.0.</p>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="footer-brand">Condicio</div>
+        <p>Open standard for contract intelligence data. Released under the Apache 2.0 license.</p>
+        <p style="margin-top:8px;font-size:0.8rem;">A project of <a href="https://tensflare.com" style="color:var(--slate-400);">Tensflare Ltd</a>.</p>
+      </div>
+      <div>
+        <h4>Schema</h4>
+        <ul>
+          <li><a href="schema/">Browse</a></li>
+          <li><a href="validator/">Validator</a></li>
+          <li><a href="field-reference.html">Reference</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Community</h4>
+        <ul>
+          <li><a href="https://github.com/docfide/condicio">GitHub</a></li>
+          <li><a href="governance.html">Governance</a></li>
+          <li><a href="https://github.com/docfide/condicio/blob/main/CONTRIBUTING.md">Contributing</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>About</h4>
+        <ul>
+          <li><a href="https://docfide.com">Docfide</a></li>
+          <li><a href="https://github.com/docfide/condicio/blob/main/LICENSE">License</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

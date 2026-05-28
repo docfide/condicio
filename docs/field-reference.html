@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Field Reference — Condicio</title>
+  <meta name="description" content="Complete field reference for the Condicio JSON Schema — root fields, $defs, types, and properties.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><path d='M148,48A70,70 0 1 0 148,152' stroke='%230f6e56' stroke-width='14' fill='none' stroke-linecap='round'/><line x1='148' y1='48' x2='177' y2='48' stroke='%230f6e56' stroke-width='14' stroke-linecap='round'/><line x1='148' y1='152' x2='177' y2='152' stroke='%230f6e56' stroke-width='14' stroke-linecap='round'/></svg>">
+  <style>
+    .ref-table { width:100%; border-collapse: collapse; font-size:0.85rem; margin:16px 0 32px; }
+    .ref-table th { text-align:left; padding:10px 12px; background:var(--slate-50); border-bottom:2px solid var(--slate-200); font-weight:600; color:var(--slate-700); }
+    .ref-table td { padding:10px 12px; border-bottom:1px solid var(--slate-100); vertical-align:top; }
+    .ref-table tr:hover td { background:var(--slate-50); }
+    .ref-table .req { color:#dc2626; font-weight:700; }
+    .ref-section { margin-top:40px; }
+    .ref-section h2 { font-size:1.3rem; margin-bottom:4px; }
+    .ref-section > p { color:var(--slate-500); font-size:0.9rem; margin-bottom:16px; }
+    .type-badge { display:inline-block; padding:1px 8px; border-radius:4px; font-size:0.75rem; font-weight:500; font-family:var(--font-mono); }
+    .type-badge.string { background:#eef2ff; color:#4f46e5; }
+    .type-badge.number { background:#ecfdf5; color:#047857; }
+    .type-badge.integer { background:#ecfdf5; color:#047857; }
+    .type-badge.object { background:#fffbeb; color:#b45309; }
+    .type-badge.array { background:#fdf2f8; color:#be185d; }
+    .type-badge.any { background:var(--slate-100); color:var(--slate-600); }
+    .type-badge.boolean { background:#f0fdf4; color:#16a34a; }
+    .docs-content h2 { margin-top:48px; padding-top:16px; border-top:1px solid var(--slate-100); }
+    .docs-content h3 { margin-top:28px; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/condicio/" class="nav-brand">
+        <svg class="nav-logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <path d="M148,48A70,70 0 1 0 148,152" stroke="#0f6e56" stroke-width="14" fill="none" stroke-linecap="round"/>
+          <line x1="148" y1="48" x2="177" y2="48" stroke="#0f6e56" stroke-width="14" stroke-linecap="round"/>
+          <line x1="148" y1="152" x2="177" y2="152" stroke="#0f6e56" stroke-width="14" stroke-linecap="round"/>
+          <circle cx="173" cy="100" r="5" fill="#0f6e56"/>
+        </svg>
+        Condicio
+      </a>
+      <ul class="nav-links">
+        <li><a href="schema/">Schema</a></li>
+        <li><a href="validator/">Validator</a></li>
+        <li><a href="usage.html">Usage</a></li>
+        <li><a href="https://github.com/docfide/condicio">GitHub</a></li>
+        <li><a href="https://www.npmjs.com/package/condicio-schema"><span class="badge badge-npm">npm</span></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1>Field Reference</h1>
+      <p>Complete reference for the Condicio JSON Schema. Auto-generated from <a href="https://raw.githubusercontent.com/docfide/condicio/main/schema/condicio.schema.json"><code>condicio.schema.json</code></a>.</p>
+    </div>
+  </div>
+
+  <div class="section" style="padding-top:0;">
+    <div class="container docs-content">
+
+      <h2>Root-level fields</h2>
+
+      <table class="ref-table">
+        <thead>
+          <tr><th style="width:220px;">Field</th><th style="width:100px;">Type</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>condicio</code> <span class="req">*</span></td>
+            <td><span class="type-badge any">any</span></td>
+            <td>Immutable identifier for the Condicio schema version.</td>
+          </tr>
+          <tr>
+            <td><code>specVersion</code> <span class="req">*</span></td>
+            <td><span class="type-badge string">string</span></td>
+            <td>Version of the Condicio specification this document conforms to. <code>0.1.0</code></td>
+          </tr>
+          <tr>
+            <td><code>id</code></td>
+            <td><span class="type-badge string">string</span></td>
+            <td>Unique identifier for this contract document (UUID, URI, or application-specific ID).</td>
+          </tr>
+          <tr>
+            <td><code>contract</code> <span class="req">*</span></td>
+            <td><span class="type-badge object">object</span></td>
+            <td>Top-level metadata about the contract document.</td>
+          </tr>
+          <tr>
+            <td><code>parties</code> <span class="req">*</span></td>
+            <td><span class="type-badge array">array</span></td>
+            <td>Parties to the contract with roles and identifiers. Items: <code>$defs/party</code></td>
+          </tr>
+          <tr>
+            <td><code>dates</code></td>
+            <td><span class="type-badge array">array</span></td>
+            <td>Key dates extracted from or associated with the contract. Items: <code>$defs/contractDate</code></td>
+          </tr>
+          <tr>
+            <td><code>clauses</code></td>
+            <td><span class="type-badge array">array</span></td>
+            <td>Extracted clauses, sections, or provisions. Items: <code>$defs/clause</code></td>
+          </tr>
+          <tr>
+            <td><code>obligations</code></td>
+            <td><span class="type-badge array">array</span></td>
+            <td>Obligations, covenants, duties, or action items imposed on any party. Items: <code>$defs/obligation</code></td>
+          </tr>
+          <tr>
+            <td><code>financials</code></td>
+            <td><span class="type-badge object">object</span></td>
+            <td>Monetary terms and financial provisions.</td>
+          </tr>
+          <tr>
+            <td><code>risks</code></td>
+            <td><span class="type-badge array">array</span></td>
+            <td>Risk flags and assessments identified in the contract. Items: <code>$defs/risk</code></td>
+          </tr>
+          <tr>
+            <td><code>definitions</code></td>
+            <td><span class="type-badge array">array</span></td>
+            <td>Defined terms and their definitions extracted from the contract.</td>
+          </tr>
+          <tr>
+            <td><code>metadata</code></td>
+            <td><span class="type-badge object">object</span></td>
+            <td>Extraction and processing metadata.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3><code>contract</code></h3>
+      <table class="ref-table">
+        <thead>
+          <tr><th style="width:200px;">Field</th><th style="width:100px;">Type</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>title</code> <span class="req">*</span></td><td><span class="type-badge string">string</span></td><td>Full title or name of the contract.</td></tr>
+          <tr><td><code>type</code></td><td><span class="type-badge string">string</span></td><td>Classification of the contract type e.g. <code>NDA</code>, <code>MSA</code>, <code>SOW</code>, <code>License Agreement</code>, <code>Service Agreement</code>, <code>Employment Agreement</code>, <code>Partnership Agreement</code>, <code>Lease</code>, <code>Purchase Agreement</code>, <code>Insurance Policy</code></td></tr>
+          <tr><td><code>description</code></td><td><span class="type-badge string">string</span></td><td>Short summary or purpose of the contract.</td></tr>
+          <tr><td><code>language</code></td><td><span class="type-badge string">string</span></td><td>Primary language of the contract (BCP 47 code) e.g. <code>en</code>, <code>de</code>, <code>fr</code>, <code>ja</code></td></tr>
+          <tr><td><code>jurisdiction</code></td><td><span class="type-badge string">string</span></td><td>Governing jurisdiction e.g. <code>New York</code>, <code>England and Wales</code>, <code>Delaware</code></td></tr>
+          <tr><td><code>governingLaw</code></td><td><span class="type-badge string">string</span></td><td>Explicit governing law clause text or reference.</td></tr>
+          <tr><td><code>status</code></td><td><span class="type-badge string">string</span></td><td><code>draft</code>, <code>proposed</code>, <code>executed</code>, <code>active</code>, <code>amended</code>, <code>terminated</code>, <code>expired</code>, <code>superseded</code></td></tr>
+          <tr><td><code>contractId</code></td><td><span class="type-badge string">string</span></td><td>External contract identifier used by the source system.</td></tr>
+          <tr><td><code>executionDate</code></td><td><span class="type-badge string">date</span></td><td>Date the contract was signed by all parties.</td></tr>
+          <tr><td><code>effectiveDate</code></td><td><span class="type-badge string">date</span></td><td>Date the contract becomes effective.</td></tr>
+          <tr><td><code>expiryDate</code></td><td><span class="type-badge string">date</span></td><td>Date the contract expires.</td></tr>
+          <tr><td><code>renewalTerms</code></td><td><span class="type-badge string">string</span></td><td>Description of renewal terms or conditions.</td></tr>
+          <tr><td><code>amendmentSummary</code></td><td><span class="type-badge string">string</span></td><td>Summary of amendments if this document supersedes a prior version.</td></tr>
+        </tbody>
+      </table>
+
+      <h3><code>financials</code></h3>
+      <table class="ref-table">
+        <thead>
+          <tr><th style="width:200px;">Field</th><th style="width:100px;">Type</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>currency</code></td><td><span class="type-badge string">string</span></td><td>Default currency for all financial terms (ISO 4217) e.g. <code>USD</code>, <code>EUR</code>, <code>GBP</code></td></tr>
+          <tr><td><code>totalContractValue</code></td><td><span class="type-badge number">number</span></td><td>Total contract value in the default currency.</td></tr>
+          <tr><td><code>paymentTerms</code></td><td><span class="type-badge string">string</span></td><td>Standard payment terms (e.g. Net 30, Net 60).</td></tr>
+          <tr><td><code>latePaymentPenalty</code></td><td><span class="type-badge string">string</span></td><td>Late payment penalty or interest rate.</td></tr>
+          <tr><td><code>terms</code></td><td><span class="type-badge array">array</span></td><td>Individual financial terms extracted from the contract. Items: <code>$defs/financialTerm</code></td></tr>
+          <tr><td><code>paymentSchedule</code></td><td><span class="type-badge array">array</span></td><td>Structured payment schedule. Items: <code>$defs/payment</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3><code>definitions</code></h3>
+      <table class="ref-table">
+        <thead>
+          <tr><th style="width:200px;">Field</th><th style="width:100px;">Type</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>term</code> <span class="req">*</span></td><td><span class="type-badge string">string</span></td><td>The defined term or capitalised phrase.</td></tr>
+          <tr><td><code>definition</code> <span class="req">*</span></td><td><span class="type-badge string">string</span></td><td>The definition text.</td></tr>
+          <tr><td><code>clauseRef</code></td><td><span class="type-badge string">string</span></td><td>Reference to the clause where this term is defined.</td></tr>
+        </tbody>
+      </table>
+
+      <h3><code>metadata</code></h3>
+      <table class="ref-table">
+        <thead>
+          <tr><th style="width:200px;">Field</th><th style="width:100px;">Type</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>extractedAt</code></td><td><span class="type-badge string">string</span></td><td>ISO 8601 timestamp of extraction.</td></tr>
+          <tr><td><code>extractedBy</code></td><td><span class="type-badge string">string</span></td><td>Name or identifier of the extraction tool or agent.</td></tr>
+          <tr><td><code>extractionEngine</code></td><td><span class="type-badge object">object</span></td><td>Tool, engine, or model used. Properties: <code>name</code>, <code>version</code></td></tr>
+          <tr><td><code>confidence</code></td><td><span class="type-badge number">number</span></td><td>Overall extraction confidence score (0.0 to 1.0).</td></tr>
+          <tr><td><code>sourceDocument</code></td><td><span class="type-badge object">object</span></td><td>Reference to the source document. Properties: <code>filename</code>, <code>mediaType</code>, <code>size</code>, <code>pages</code>, <code>hash</code>, <code>uri</code></td></tr>
+          <tr><td><code>tags</code></td><td><span class="type-badge array">array</span></td><td>Arbitrary tags or labels applied to this contract.</td></tr>
+          <tr><td><code>custom</code></td><td><span class="type-badge object">object</span></td><td>Extensible container for tool-specific or organisation-specific metadata.</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Defined types (<code>$defs</code>)</h2>
+
+      <div class="ref-section">
+        <h3><code>date</code></h3>
+        <p>A date string in ISO 8601 format (YYYY-MM-DD) or full datetime.</p>
+
+        <h3><code>contactInfo</code></h3>
+        <p>Contact information for a person or organisation.</p>
+        <table class="ref-table">
+          <thead><tr><th style="width:200px;">Field</th><th style="width:100px;">Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>name</code></td><td><span class="type-badge string">string</span></td><td>Full name of the contact.</td></tr>
+            <tr><td><code>email</code></td><td><span class="type-badge string">string</span></td><td>Email address.</td></tr>
+            <tr><td><code>phone</code></td><td><span class="type-badge string">string</span></td><td>Phone number.</td></tr>
+            <tr><td><code>address</code></td><td><span class="type-badge object">address</span></td><td>Postal address (<code>$defs/address</code>).</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="ref-section">
+        <h3><code>address</code></h3>
+        <p>A postal address.</p>
+        <table class="ref-table">
+          <thead><tr><th style="width:200px;">Field</th><th style="width:100px;">Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>street</code></td><td><span class="type-badge string">string</span></td><td>Street address.</td></tr>
+            <tr><td><code>city</code></td><td><span class="type-badge string">string</span></td><td>City.</td></tr>
+            <tr><td><code>stateOrProvince</code></td><td><span class="type-badge string">string</span></td><td>State or province.</td></tr>
+            <tr><td><code>postalCode</code></td><td><span class="type-badge string">string</span></td><td>Postal or ZIP code.</td></tr>
+            <tr><td><code>country</code></td><td><span class="type-badge string">string</span></td><td>Country.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="ref-section">
+        <h3><code>party</code></h3>
+        <p>A named party to the contract.</p>
+        <table class="ref-table">
+          <thead><tr><th style="width:200px;">Field</th><th style="width:100px;">Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>id</code></td><td><span class="type-badge string">string</span></td><td>Unique identifier for this party within the document.</td></tr>
+            <tr><td><code>name</code> <span class="req">*</span></td><td><span class="type-badge string">string</span></td><td>Full legal name of the party.</td></tr>
+            <tr><td><code>alias</code></td><td><span class="type-badge string">string</span></td><td>Short name or abbreviation used throughout the contract.</td></tr>
+            <tr><td><code>role</code> <span class="req">*</span></td><td><span class="type-badge string">string</span></td><td>Role in the contract e.g. <code>buyer</code>, <code>seller</code>, <code>licensor</code>, <code>licensee</code>, <code>employer</code>, <code>employee</code>, <code>landlord</code>, <code>tenant</code>, <code>service provider</code>, <code>client</code></td></tr>
+            <tr><td><code>type</code></td><td><span class="type-badge string">string</span></td><td>Legal entity type e.g. <code>corporation</code>, <code>llc</code>, <code>individual</code>, <code>partnership</code>, <code>government</code>, <code>non-profit</code></td></tr>
+            <tr><td><code>jurisdiction</code></td><td><span class="type-badge string">string</span></td><td>Jurisdiction of formation or residence.</td></tr>
+            <tr><td><code>contact</code></td><td><span class="type-badge object">contactInfo</span></td><td>Contact information (<code>$defs/contactInfo</code>).</td></tr>
+            <tr><td><code>representative</code></td><td><span class="type-badge object">contactInfo</span></td><td>Signatory or representative (<code>$defs/contactInfo</code>).</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="ref-section">
+        <h3><code>contractDate</code></h3>
+        <p>A named date associated with the contract.</p>
+        <table class="ref-table">
+          <thead><tr><th style="width:200px;">Field</th><th style="width:100px;">Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>label</code> <span class="req">*</span></td><td><span class="type-badge string">string</span></td><td>Semantic label e.g. <code>execution</code>, <code>effective</code>, <code>expiry</code>, <code>renewal</code>, <code>notice deadline</code>, <code>delivery</code>, <code>payment due</code>, <code>termination</code></td></tr>
+            <tr><td><code>date</code> <span class="req">*</span></td><td><span class="type-badge string">date</span></td><td>The date value (<code>$defs/date</code>).</td></tr>
+            <tr><td><code>description</code></td><td><span class="type-badge string">string</span></td><td>Context or description of this date.</td></tr>
+            <tr><td><code>clauseRef</code></td><td><span class="type-badge string">string</span></td><td>Reference to the relevant clause.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="ref-section">
+        <h3><code>clause</code></h3>
+        <p>An extracted clause, section, or provision.</p>
+        <table class="ref-table">
+          <thead><tr><th style="width:200px;">Field</th><th style="width:100px;">Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>id</code> <span class="req">*</span></td><td><span class="type-badge string">string</span></td><td>Clause identifier (section number or generated ID).</td></tr>
+            <tr><td><code>title</code></td><td><span class="type-badge string">string</span></td><td>Clause heading or title.</td></tr>
+            <tr><td><code>text</code> <span class="req">*</span></td><td><span class="type-badge string">string</span></td><td>Full text of the clause.</td></tr>
+            <tr><td><code>summary</code></td><td><span class="type-badge string">string</span></td><td>Short AI-generated or human-written summary.</td></tr>
+            <tr><td><code>type</code></td><td><span class="type-badge string">string</span></td><td>Classification e.g. <code>confidentiality</code>, <code>indemnification</code>, <code>limitation of liability</code>, <code>termination</code>, <code>payment</code>, <code>warranty</code>, <code>intellectual property</code>, <code>data protection</code>, <code>non-compete</code>, <code>force majeure</code>, <code>dispute resolution</code>, <code>governing law</code>, <code>assignment</code>, <code>insurance</code>, <code>audit</code></td></tr>
+            <tr><td><code>scope</code></td><td><span class="type-badge string">string</span></td><td>Scope of the clause (e.g. which parties it binds).</td></tr>
+            <tr><td><code>obligationRefs</code></td><td><span class="type-badge array">array</span></td><td>References to obligations derived from this clause.</td></tr>
+            <tr><td><code>riskRefs</code></td><td><span class="type-badge array">array</span></td><td>References to risks identified in this clause.</td></tr>
+            <tr><td><code>confidence</code></td><td><span class="type-badge number">number</span></td><td>Extraction confidence (0.0 to 1.0).</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="ref-section">
+        <h3><code>obligation</code></h3>
+        <p>An obligation, duty, covenant, or action item imposed on a party.</p>
+        <table class="ref-table">
+          <thead><tr><th style="width:200px;">Field</th><th style="width:100px;">Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>id</code></td><td><span class="type-badge string">string</span></td><td>Unique identifier for this obligation.</td></tr>
+            <tr><td><code>description</code> <span class="req">*</span></td><td><span class="type-badge string">string</span></td><td>Description of the obligation.</td></tr>
+            <tr><td><code>obligor</code> <span class="req">*</span></td><td><span class="type-badge string">string</span></td><td>Party or role responsible for fulfilling the obligation.</td></tr>
+            <tr><td><code>beneficiary</code></td><td><span class="type-badge string">string</span></td><td>Party or role entitled to the obligation.</td></tr>
+            <tr><td><code>type</code></td><td><span class="type-badge string">string</span></td><td>Category e.g. <code>payment</code>, <code>delivery</code>, <code>reporting</code>, <code>compliance</code>, <code>confidentiality</code>, <code>insurance</code>, <code>maintenance</code>, <code>notice</code>, <code>performance</code>, <code>non-competition</code></td></tr>
+            <tr><td><code>deadline</code></td><td><span class="type-badge string">string</span></td><td>Date or trigger for the obligation.</td></tr>
+            <tr><td><code>deadlineType</code></td><td><span class="type-badge string">string</span></td><td><code>fixed date</code>, <code>days from event</code>, <code>recurring</code>, <code>conditional</code>, <code>ongoing</code></td></tr>
+            <tr><td><code>status</code></td><td><span class="type-badge string">string</span></td><td><code>pending</code>, <code>fulfilled</code>, <code>overdue</code>, <code>waived</code>, <code>breached</code></td></tr>
+            <tr><td><code>clauseRef</code></td><td><span class="type-badge string">string</span></td><td>Reference to the source clause.</td></tr>
+            <tr><td><code>confidence</code></td><td><span class="type-badge number">number</span></td><td>Extraction confidence (0.0 to 1.0).</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="ref-section">
+        <h3><code>financialTerm</code></h3>
+        <p>A financial term or monetary provision.</p>
+        <table class="ref-table">
+          <thead><tr><th style="width:200px;">Field</th><th style="width:100px;">Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>label</code> <span class="req">*</span></td><td><span class="type-badge string">string</span></td><td>Label e.g. <code>contract value</code>, <code>annual fee</code>, <code>monthly payment</code>, <code>deposit</code>, <code>interest rate</code>, <code>late fee</code>, <code>minimum commitment</code>, <code>cap</code>, <code>threshold</code></td></tr>
+            <tr><td><code>amount</code> <span class="req">*</span></td><td><span class="type-badge number">number</span></td><td>Monetary amount.</td></tr>
+            <tr><td><code>currency</code></td><td><span class="type-badge string">string</span></td><td>ISO 4217 currency code (overrides top-level currency).</td></tr>
+            <tr><td><code>period</code></td><td><span class="type-badge string">string</span></td><td><code>one-time</code>, <code>monthly</code>, <code>annually</code>, <code>quarterly</code>, <code>per unit</code></td></tr>
+            <tr><td><code>description</code></td><td><span class="type-badge string">string</span></td><td>Context or description.</td></tr>
+            <tr><td><code>clauseRef</code></td><td><span class="type-badge string">string</span></td><td>Reference to the relevant clause.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="ref-section">
+        <h3><code>payment</code></h3>
+        <p>A scheduled payment.</p>
+        <table class="ref-table">
+          <thead><tr><th style="width:200px;">Field</th><th style="width:100px;">Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>dueDate</code> <span class="req">*</span></td><td><span class="type-badge string">date</span></td><td>Due date (<code>$defs/date</code>).</td></tr>
+            <tr><td><code>amount</code> <span class="req">*</span></td><td><span class="type-badge number">number</span></td><td>Payment amount.</td></tr>
+            <tr><td><code>description</code></td><td><span class="type-badge string">string</span></td><td>Description of the payment.</td></tr>
+            <tr><td><code>condition</code></td><td><span class="type-badge string">string</span></td><td>Condition or trigger for this payment.</td></tr>
+            <tr><td><code>status</code></td><td><span class="type-badge string">string</span></td><td><code>pending</code>, <code>paid</code>, <code>overdue</code>, <code>cancelled</code></td></tr>
+            <tr><td><code>paidDate</code></td><td><span class="type-badge string">date</span></td><td>Date paid (<code>$defs/date</code>).</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="ref-section">
+        <h3><code>risk</code></h3>
+        <p>A risk flag or assessment identified in the contract.</p>
+        <table class="ref-table">
+          <thead><tr><th style="width:200px;">Field</th><th style="width:100px;">Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>id</code></td><td><span class="type-badge string">string</span></td><td>Unique identifier for this risk.</td></tr>
+            <tr><td><code>description</code> <span class="req">*</span></td><td><span class="type-badge string">string</span></td><td>Description of the risk.</td></tr>
+            <tr><td><code>severity</code> <span class="req">*</span></td><td><span class="type-badge string">string</span></td><td><code>low</code>, <code>medium</code>, <code>high</code>, <code>critical</code></td></tr>
+            <tr><td><code>category</code></td><td><span class="type-badge string">string</span></td><td><code>financial</code>, <code>legal</code>, <code>compliance</code>, <code>operational</code>, <code>reputational</code>, <code>data security</code>, <code>intellectual property</code></td></tr>
+            <tr><td><code>impact</code></td><td><span class="type-badge string">string</span></td><td>Description of potential impact.</td></tr>
+            <tr><td><code>mitigation</code></td><td><span class="type-badge string">string</span></td><td>Existing mitigation or recommended action.</td></tr>
+            <tr><td><code>affectedParty</code></td><td><span class="type-badge string">string</span></td><td>Party most affected by this risk.</td></tr>
+            <tr><td><code>clauseRef</code></td><td><span class="type-badge string">string</span></td><td>Reference to the relevant clause.</td></tr>
+            <tr><td><code>confidence</code></td><td><span class="type-badge number">number</span></td><td>Extraction confidence (0.0 to 1.0).</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="footer-brand">Condicio</div>
+        <p>Open standard for contract intelligence data. Released under the Apache 2.0 license.</p>
+        <p style="margin-top:8px;font-size:0.8rem;">A project of <a href="https://tensflare.com" style="color:var(--slate-400);">Tensflare Ltd</a>.</p>
+      </div>
+      <div>
+        <h4>Schema</h4>
+        <ul>
+          <li><a href="schema/">Browse</a></li>
+          <li><a href="validator/">Validator</a></li>
+          <li><a href="field-reference.html">Reference</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Community</h4>
+        <ul>
+          <li><a href="https://github.com/docfide/condicio">GitHub</a></li>
+          <li><a href="governance.html">Governance</a></li>
+          <li><a href="https://github.com/docfide/condicio/blob/main/CONTRIBUTING.md">Contributing</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>About</h4>
+        <ul>
+          <li><a href="https://docfide.com">Docfide</a></li>
+          <li><a href="https://github.com/docfide/condicio/blob/main/LICENSE">License</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
